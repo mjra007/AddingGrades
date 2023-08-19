@@ -7,7 +7,7 @@ namespace AddinGrades
 {
     public class Program : IExcelAddIn
     {
-        static CustomTaskPane ctp;
+        public static LoggerPanel? LoggerPanel;
         static void Main(string[] args)
         {
         }
@@ -16,12 +16,12 @@ namespace AddinGrades
         { 
         }
         public void AutoOpen()
-        {
-
-            var ctp = CustomTaskPaneFactory.CreateCustomTaskPane(typeof(CustomPanel), "Grades addin console");
+        { 
+            LoggerPanel = Activator.CreateInstance(typeof(LoggerPanel)) as LoggerPanel;
+            var ctp = CustomTaskPaneFactory.CreateCustomTaskPane(LoggerPanel, "Grades addin console");
             ctp.Visible = true;
             ctp.DockPosition = MsoCTPDockPosition.msoCTPDockPositionTop;
-            ctp.Height = 200;
+            ctp.Height = 80;  
         }
     }
 }
