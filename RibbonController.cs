@@ -2,17 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Windows.Forms;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices; 
 using ExcelDna.Integration;
 using Microsoft.Office.Interop.Excel;
 using Application = Microsoft.Office.Interop.Excel.Application;
-using Range = Microsoft.Office.Interop.Excel.Range;
-using static System.Net.WebRequestMethods;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using AddinGrades.DTO;
+using Range = Microsoft.Office.Interop.Excel.Range; 
+using AddinGrades.DTO; 
 
 namespace AddinGrades
 {
@@ -30,33 +25,57 @@ namespace AddinGrades
               <button id='gradeSheetButton' imageMso='MicrosoftVisualFoxPro'  label='Make this worksheet a gradesheet' onAction='OnGradeSheetCreatePressed' size='large'/>
               <button id='addCoursework' imageMso='SourceControlAddObjects'  label='Add/Remove coursework' onAction='OnAddCoursework' size='large'/>
               <button id='manageCourseworkWeights' imageMso='FunctionWizard'  label='Manage Coursework Weights' onAction='OnManageCourseworkWeights' size='large'/>            
-              <button id='recalculateKnowledge' imageMso='Calculator'  label='Recalculate knowledge grade' onAction='OnRecalculateHit' size='large'/>            
             </group >
+            <group id ='group2' label='Utilities'>
+              <button id='UnlockLock' imageMso='Lock'  label='Unlock or Lock sheet' onAction='UnlockSheet' size='large'/>  
+              <button id='CopyGradeString' imageMso='Copy' label='Copy grades csv string' onAction='OnCopyGradeString' size='large'/>
+            </group>
           </tab>
         </tabs>
       </ribbon>
     </customUI>";
         }
-
-        public void OnRecalculateHit(IRibbonControl control)
+        
+        public void OnCopyGradeString(IRibbonControl control)
         {
-            foreach()
+            var sheet = Utils.GetWorksheetById(Utils.GetCurrentSheetID());
+        }
+
+
+        public void UnlockSheet(IRibbonControl control)
+        {
+            var sheet = Utils.GetWorksheetById(Utils.GetCurrentSheetID());
+            if (sheet.ProtectContents)
+            {
+                sheet.Unprotect();
+            }
+            else
+            {
+                sheet.Protect();
+            }
         }
 
         public void OnManageCourseworkWeights(IRibbonControl control)
         {
+            if (Utils.IsEditing(Utils.GetExcelApplication()))
+                return;
             ManageCourseworkWeight form = new(Utils.GetCurrentSheetID());
             form.Show();
         }
 
         public void OnAddCoursework(IRibbonControl control)
         {
+            if (Utils.IsEditing(Utils.GetExcelApplication()))
+                return;
             AddCoursework form = new(Utils.GetCurrentSheetID()); 
             form.Show();
         }
 
         public void OnGradeSheetCreatePressed(IRibbonControl control)
         {
+            Program.CreationOfGradeSheetInProgress = true;
+            if (Utils.IsEditing(Utils.GetExcelApplication()))
+                return;
             Application app = ExcelDnaUtil.Application as Application;
             if (app.ActiveWorkbook is not null && app.ActiveSheet is not null && (app.ActiveSheet as Worksheet).GetCustomID() is null)
             {
@@ -76,7 +95,8 @@ namespace AddinGrades
             else
             {
                 Program.LoggerPanel?.WriteLineToPanel("No active workbook or sheet was found.\nPlease create a new excel file before attempting to create a grade sheet.");
-            }
+            } 
+            Program.CreationOfGradeSheetInProgress = false;
         }
 
 

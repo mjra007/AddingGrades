@@ -32,7 +32,9 @@ namespace AddinGrades
                 Enumerable.Repeat(0d, data.GradeSheets[GradeSheetID].Coursework.Count).ToArray()));
             data.Save();
             this.tablesList.Items.Add(newTableName.Text);
-            new GradeTable(GradeSheetID).InsertDropdownForWeightedTable();
+            GradeTable table = new GradeTable(GradeSheetID);
+            table.InsertDropdownForWeightedTable();
+            table.InsertKnowledgeFunctionForRows();
         }
 
         private void tablesList_SelectedIndexChanged(object sender, EventArgs e)
@@ -61,8 +63,10 @@ namespace AddinGrades
                     .ChangeWeight(data.GradeSheets[GradeSheetID].GetCoursework(item.GetCourseworkName()).Object, 
                     double.Parse(item.GetWeight()));
             }
-            
+
             data.Save();
+            GradeTable table = new GradeTable(GradeSheetID); 
+            table.InsertKnowledgeFunctionForRows();
         }
 
        

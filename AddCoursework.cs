@@ -41,8 +41,11 @@ namespace AddinGrades
             data.Save(); 
             courseworkInput.Text = string.Empty;
             this.courseworkList.Items.Clear();
-            this.courseworkList.Items.AddRange(data.GradeSheets[GradeSheetID].Coursework.Select(s => s.Name).ToArray()); 
-            new GradeTable(GradeSheetID).InsertNewCoursework(newCoursework);
+            this.courseworkList.Items.AddRange(data.GradeSheets[GradeSheetID].Coursework.Select(s => s.Name).ToArray());
+            GradeTable table = new(GradeSheetID);
+            table.InsertNewCoursework(newCoursework);
+            table.InsertDropdownForWeightedTable();
+            table.InsertKnowledgeFunctionForRows();
         }
 
         private void removeCoursework_Click(object sender, EventArgs e)
@@ -59,7 +62,10 @@ namespace AddinGrades
             }
             data.Save();
             this.courseworkList.Items.Clear();
-            this.courseworkList.Items.AddRange(gradeSheet.Coursework.Select(s => s.Name).ToArray()); 
+            this.courseworkList.Items.AddRange(gradeSheet.Coursework.Select(s => s.Name).ToArray());
+            GradeTable table = new(GradeSheetID);
+            table.InsertDropdownForWeightedTable();
+            table.InsertKnowledgeFunctionForRows();
         }
 
         private void groupBox1_Enter(object sender, EventArgs e)

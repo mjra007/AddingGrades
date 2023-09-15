@@ -126,5 +126,24 @@ namespace AddinGrades
             if (!found)
                 cps.Add(name, value);
         }
+
+        public static bool IsEditing(Application excelApp)
+        {
+            if (excelApp.Interactive)
+            {
+                try
+                {
+                    excelApp.Interactive = false;
+                    excelApp.Interactive = true;
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Please stop cell editing before you continue.");
+                    return true;
+                }
+            }
+            return false;
+        }
+
     }
 }
