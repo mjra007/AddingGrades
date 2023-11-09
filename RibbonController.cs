@@ -2,12 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices; 
+using System.Runtime.InteropServices;
 using ExcelDna.Integration;
 using Microsoft.Office.Interop.Excel;
 using Application = Microsoft.Office.Interop.Excel.Application;
-using Range = Microsoft.Office.Interop.Excel.Range; 
-using AddinGrades.DTO; 
+using Range = Microsoft.Office.Interop.Excel.Range;
+using AddinGrades.DTO;
 
 namespace AddinGrades
 {
@@ -35,7 +35,7 @@ namespace AddinGrades
       </ribbon>
     </customUI>";
         }
-        
+
         public void OnCopyGradeString(IRibbonControl control)
         {
             var sheet = Utils.GetWorksheetById(Utils.GetCurrentSheetID());
@@ -67,43 +67,43 @@ namespace AddinGrades
         {
             if (Utils.IsEditing(Utils.GetExcelApplication()))
                 return;
-            AddCoursework form = new(Utils.GetCurrentSheetID()); 
+            AddCoursework form = new(Utils.GetCurrentSheetID());
             form.Show();
         }
 
         public void OnGradeSheetCreatePressed(IRibbonControl control)
         {
-            Program.CreationOfGradeSheetInProgress = true;
+            if (Program.CreationOfGradeSheetInProgress)
+                return;
             if (Utils.IsEditing(Utils.GetExcelApplication()))
                 return;
             Application app = ExcelDnaUtil.Application as Application;
-            if (app.ActiveWorkbook is not null && app.ActiveSheet is not null && (app.ActiveSheet as Worksheet).GetCustomID() is null)
+            if (app.ActiveWorkbook is null || app.ActiveSheet is null)
             {
-                WorkbookData data = app.LoadWorkbookData().IfNullCreate();
-                //Add custom ID to gradeSheet if not created already
-                Worksheet worksheet = app.ActiveSheet as Worksheet;
-                string gradeSheetID = worksheet.GetCustomID();
-                gradeSheetID ??= worksheet.CreateCustomID();
-                //create gradesheet in workbookdata
-                GradeSheet gradeSheet = new();
-                gradeSheet.CourseworkWeightedTables.Add(new CourseworkWeightedTable("Default", gradeSheet.Coursework, 
-                    Enumerable.Repeat(0d,gradeSheet.Coursework.Count).ToArray()));
-                data.GradeSheets.Add(gradeSheetID, gradeSheet);
-                data.Save(); 
-                new GradeTable(gradeSheetID).CreateDefaultTable(data, app);
+                Program.LoggerPanel?.WriteLineToPanel("No active workbook or sheet was found.");
+                return;
             }
-            else
+
+            if ((app.ActiveSheet as Worksheet).GetCustomID() is not null)
             {
-                Program.LoggerPanel?.WriteLineToPanel("No active workbook or sheet was found.\nPlease create a new excel file before attempting to create a grade sheet.");
-            } 
+                Program.LoggerPanel?.WriteLineToPanel("This worksheet is already a grade sheet!");
+                return;
+            }
+
+            Program.CreationOfGradeSheetInProgress = true;
+            WorkbookData data = app.LoadWorkbookData().IfNullCreate();
+            //Add custom ID to gradeSheet if not created already
+            Worksheet worksheet = app.ActiveSheet as Worksheet;
+            string gradeSheetID = worksheet.GetCustomID();
+            gradeSheetID ??= worksheet.CreateCustomID();
+            //create gradesheet in workbookdata
+            GradeSheet gradeSheet = new();
+            gradeSheet.CourseworkWeightedTables.Add(new CourseworkWeightedTable("Default", gradeSheet.Coursework,
+                Enumerable.Repeat(0d, gradeSheet.Coursework.Count).ToArray()));
+            data.GradeSheets.Add(gradeSheetID, gradeSheet);
+            data.Save();
+            new GradeTable(gradeSheetID).CreateDefaultTable(data, app); 
             Program.CreationOfGradeSheetInProgress = false;
-        }
-
-
-
-       
-
-
-
+        } 
     }
 }

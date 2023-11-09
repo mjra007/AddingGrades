@@ -11,7 +11,8 @@ namespace AddinGrades.DTO
 
         //Key is the worksheet code name and the value is the gradesheet object
         public SerializableDictionary<string, GradeSheet> GradeSheets = new();
- 
+        public Queue<string> History = new(10);
+
         public WorkbookData() {
         }
 
@@ -42,14 +43,25 @@ namespace AddinGrades.DTO
             Application app = ExcelDnaUtil.Application as Application;
             foreach (CustomXMLPart item in app.ActiveWorkbook.CustomXMLParts.Cast<CustomXMLPart>())
             {
-                string xml = item.XML;
-                if (xml.Contains("WorkbookData"))
+                string oldSavedXML = item.XML;
+                if (oldSavedXML.Contains("WorkbookData"))
                 {
-                    item.Delete();
+/*                    //Only save in history if there is a diff
+                    if (History.Last().Equals(oldSavedXML) == false)
+                    {
+                        //if history is full dequeue
+                        if(History.Count == 10)
+                        {
+                            History.Dequeue();
+                        }
+                        History.Enqueue(oldSavedXML);
+                    }*/
+                    item.Delete(); 
                     app.ActiveWorkbook.CustomXMLParts.Add(WorkbookData.Serialize(this)); 
                 }
             }
         }
+         
 
     }
 }
