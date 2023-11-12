@@ -56,7 +56,7 @@ namespace AddinGrades
             GradeSheetID = gradeSheetID;
         }
 
-        public void CreateDefaultTable(WorkbookData data, Application app)
+        public void CreateDefaultTable(WorkbookData data, Application app, IEnumerable<string> studentNames)
         {
             Worksheet worksheet = app.ActiveSheet as Worksheet;
             Range currentCell = worksheet.get_Range("A2");
@@ -72,8 +72,16 @@ namespace AddinGrades
             worksheet.get_Range("A2", $"{lastColumn}2").Cells.Font.Size = 13;
             worksheet.get_Range("A2", $"{lastColumn}2").Locked = true;
             worksheet.get_Range("A2", $"{lastColumn}2").Interior.Color = ColorTranslator.ToOle(Color.LightGoldenrodYellow);
+           
+            currentCell = worksheet.get_Range("A3");
+            foreach (string name in studentNames)
+            {
+                currentCell.Cells[1] = name;
+                currentCell = currentCell.Offset[1, 0];
+            }
             worksheet.Columns.AutoFit();
-            worksheet.Columns[1].ColumnWidth = 25;
+            if(!studentNames.Any())
+                worksheet.Columns[1].ColumnWidth = 25;
             worksheet.Protect();
         }
 
@@ -123,7 +131,7 @@ namespace AddinGrades
             string finalGradeCollumnName = Utils.GetExcelColumnName(GetCollumnByNameIndex(CollumnName.FinalGrade) + 1);
             string knowledgeCollumnName = Utils.GetExcelColumnName(GetCollumnByNameIndex(CollumnName.Knowledge) + 1);
             string atitudesCollumnName = Utils.GetExcelColumnName(GetCollumnByNameIndex(CollumnName.Atitudes) + 1);
-            Utils.GetWorksheetById(GradeSheetID).get_Range($"{finalGradeCollumnName}{row}").Formula = $"=CalculateFinalGrade({knowledgeCollumnName}{row}, {atitudesCollumnName}{row})";
+            Utils.GetWorksheetById(GradeSheetID).get_Range($"{finalGradeCollumnName}{row}").Formula=$"=CalculateFinalGrade({knowledgeCollumnName}{row}, {atitudesCollumnName}{row})";
         }
 
         public string GetFinalGradeForRow(int row)

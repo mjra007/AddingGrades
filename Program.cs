@@ -18,7 +18,7 @@ namespace AddinGrades
         { 
         }
         public void AutoOpen()
-        { 
+        {
             LoggerPanel = Activator.CreateInstance(typeof(LoggerPanel)) as LoggerPanel;
             var ctp = CustomTaskPaneFactory.CreateCustomTaskPane(LoggerPanel, "Grades addin console");
             ctp.Visible = true;

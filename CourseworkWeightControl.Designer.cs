@@ -28,77 +28,76 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.courseworkWeight = new System.Windows.Forms.TextBox();
-            this.courseworkName = new System.Windows.Forms.Label();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            this.SuspendLayout();
+            groupBox1 = new GroupBox();
+            groupBox3 = new GroupBox();
+            courseworkWeight = new TextBox();
+            groupBox2 = new GroupBox();
+            courseworkName = new Label();
+            groupBox1.SuspendLayout();
+            groupBox3.SuspendLayout();
+            groupBox2.SuspendLayout();
+            SuspendLayout();
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.groupBox3);
-            this.groupBox1.Controls.Add(this.groupBox2);
-            this.groupBox1.Location = new System.Drawing.Point(3, 3);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(330, 83);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Coursework Weight";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.courseworkName);
-            this.groupBox2.Location = new System.Drawing.Point(6, 22);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(180, 56);
-            this.groupBox2.TabIndex = 0;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Coursework Name";
+            groupBox1.Controls.Add(groupBox3);
+            groupBox1.Controls.Add(groupBox2);
+            groupBox1.Location = new Point(3, 3);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(330, 83);
+            groupBox1.TabIndex = 0;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Weight";
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.courseworkWeight);
-            this.groupBox3.Location = new System.Drawing.Point(192, 22);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(132, 61);
-            this.groupBox3.TabIndex = 1;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Weight";
+            groupBox3.Controls.Add(courseworkWeight);
+            groupBox3.Location = new Point(192, 22);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Size = new Size(132, 61);
+            groupBox3.TabIndex = 1;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "Weight %";
             // 
             // courseworkWeight
             // 
-            this.courseworkWeight.Location = new System.Drawing.Point(6, 22);
-            this.courseworkWeight.Name = "courseworkWeight";
-            this.courseworkWeight.Size = new System.Drawing.Size(120, 23);
-            this.courseworkWeight.TabIndex = 0;
+            courseworkWeight.Location = new Point(6, 22);
+            courseworkWeight.Name = "courseworkWeight";
+            courseworkWeight.Size = new Size(120, 23);
+            courseworkWeight.TabIndex = 0;
+            // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(courseworkName);
+            groupBox2.Location = new Point(6, 22);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(180, 56);
+            groupBox2.TabIndex = 0;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Coursework Name";
             // 
             // courseworkName
             // 
-            this.courseworkName.AutoSize = true;
-            this.courseworkName.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.courseworkName.Location = new System.Drawing.Point(6, 19);
-            this.courseworkName.Name = "courseworkName";
-            this.courseworkName.Size = new System.Drawing.Size(0, 20);
-            this.courseworkName.TabIndex = 0;
+            courseworkName.AutoSize = true;
+            courseworkName.Font = new Font("Segoe UI", 11F, FontStyle.Regular, GraphicsUnit.Point);
+            courseworkName.Location = new Point(6, 19);
+            courseworkName.Name = "courseworkName";
+            courseworkName.Size = new Size(0, 20);
+            courseworkName.TabIndex = 0;
             // 
             // CourseworkWeightControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.groupBox1);
-            this.Name = "CourseworkWeightControl";
-            this.Size = new System.Drawing.Size(336, 91);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(groupBox1);
+            Name = "CourseworkWeightControl";
+            Size = new Size(336, 91);
+            groupBox1.ResumeLayout(false);
+            groupBox3.ResumeLayout(false);
+            groupBox3.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
+            ResumeLayout(false);
         }
 
         #endregion

@@ -2,20 +2,22 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows10.0.22621.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotNetSeleniumExtras.WaitHelpers" Version="3.11.0" />
     <PackageReference Include="Excel-DNA" Version="1.6.0" />
     <PackageReference Include="Excel-DNA.Interop" Version="15.0.1" />
     <PackageReference Include="ExcelDna.AddIn" Version="1.6.0" />
     <PackageReference Include="ExcelDna.Integration" Version="1.6.0" />
     <PackageReference Include="ExcelDna.Interop" Version="15.0.1" />
     <PackageReference Include="ExcelDna.Registration" Version="1.6.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Services.Client" Version="16.205.1" />
-  </ItemGroup> 		 
-
+    <PackageReference Include="Microsoft.TeamFoundation.DistributedTask.Common.Contracts" Version="16.205.1" />
+    <PackageReference Include="Selenium.WebDriver" Version="4.11.0" />
+  </ItemGroup>
+ 
 </Project>

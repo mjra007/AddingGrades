@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Net.WebRequestMethods;
+﻿using System.Runtime.InteropServices; 
 
 namespace AddinGrades
 {
-    public interface ILogger {
+    public interface ILogger
+    {
         void WriteLineToPanel(string input);
         void Write(string input);
 
@@ -29,33 +24,33 @@ namespace AddinGrades
 
         private void InitializeComponent()
         {
-            this.console = new System.Windows.Forms.RichTextBox();
-            this.SuspendLayout();
+            console = new RichTextBox();
+            SuspendLayout();
             // 
             // console
             // 
-            this.console.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.console.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.console.Location = new System.Drawing.Point(0, 0);
-            this.console.Name = "console";
-            this.console.ReadOnly = true;
-            this.console.Size = new System.Drawing.Size(1229, 151);
-            this.console.TabIndex = 0; 
+            console.Dock = DockStyle.Fill;
+            console.Font = new Font("Calibri", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            console.Location = new Point(0, 0);
+            console.Name = "console";
+            console.ReadOnly = true;
+            console.Size = new Size(1229, 151);
+            console.TabIndex = 0;
+            console.Text = "";
             // 
             // LoggerPanel
             // 
-            this.Controls.Add(this.console);
-            this.Name = "LoggerPanel";
-            this.Size = new System.Drawing.Size(1229, 151);
-            this.ResumeLayout(false); 
-
+            Controls.Add(console);
+            Name = "LoggerPanel";
+            Size = new Size(1229, 151);
+            ResumeLayout(false);
         }
 
         public void WriteLineToPanel(string input)
         {
             if (string.IsNullOrEmpty(console.Text))
             {
-                console.Text += DateTime.Now.ToString()+": " + input;
+                console.Text += DateTime.Now.ToString() + ": " + input;
             }
             else
             {
@@ -63,7 +58,7 @@ namespace AddinGrades
             }
         }
 
-        public void Write(string input)=> console.Text+=input; 
+        public void Write(string input) => console.Text += input;
 
         public void ErasePanel() => console.Text = string.Empty;
     }

@@ -2,12 +2,20 @@
 using ExcelDna.Integration;
 using Microsoft.Office.Core;
 using Microsoft.Office.Interop.Excel;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium;
+using SeleniumExtras.WaitHelpers;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using Application = Microsoft.Office.Interop.Excel.Application;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace AddinGrades
 {
@@ -143,6 +151,46 @@ namespace AddinGrades
                 }
             }
             return false;
+        }
+
+        public static List<string> GetListOfStudents(ChromeDriver driver, string className)
+        {
+            List<string> studentNames = new();
+            try
+            {
+                driver.Navigate().GoToUrl("https://jobra.eschoolingserver.com/DesktopDefault.aspx?tabindex=1&tabid=245&portalId=0");
+                driver.OpenClass(className);
+                var windowClasss = driver.WindowHandles.Last();
+                driver.SwitchTo().Window(driver.WindowHandles.Last()); 
+                driver.FindElement(By.Id("__tab_ctl00_editContentPlaceHolder_Tabs_tp3")).Click();
+                studentNames.AddRange( driver.FindElements(By.CssSelector("div[class='divImgStudent']")).Select(s => s.FindElement(By.TagName("a")).GetAttribute("title")).ToList()); 
+                driver.Close();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+            }
+            return studentNames;
+        }
+        public static void InsertInputById(this WebDriver driver, string id, string value) => driver.FindElement(By.Id(id)).SendKeys(value);
+
+        public static void OpenClass(this WebDriver driver, string className)
+        {
+            foreach (ISearchContext searchContext in new WebDriverWait((IWebDriver)driver, TimeSpan.FromSeconds(10.0)).Until<IWebElement>(ExpectedConditions.ElementExists(By.Id("table_387_divTable"))).FindElements(By.TagName("tr")).Skip<IWebElement>(1))
+            {
+                ReadOnlyCollection<IWebElement> elements = searchContext.FindElements(By.TagName("td"));
+                if (elements[2].Text.Equals(className))
+                    elements[1].Click();
+            }
+        } 
+        public static IEnumerable<string> GetClasses(this ChromeDriver driver)
+        {
+            driver.Navigate().GoToUrl("https://jobra.eschoolingserver.com/DesktopDefault.aspx?tabindex=1&tabid=245&portalId=0");
+            foreach (ISearchContext searchContext in new WebDriverWait((IWebDriver)driver, TimeSpan.FromSeconds(10.0)).Until<IWebElement>(ExpectedConditions.ElementExists(By.Id("table_387_divTable"))).FindElements(By.TagName("tr")).Skip<IWebElement>(1))
+                yield return searchContext.FindElements(By.TagName("td"))[2].Text;
         }
 
     }

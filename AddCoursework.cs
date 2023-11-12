@@ -55,9 +55,9 @@ namespace AddinGrades
             var gradeSheet = data.GradeSheets[GradeSheetID];
             foreach (string toRemove in courseworkList.CheckedItems)
             {
-                gradeSheet.Coursework.RemoveAll(s => s.Name == toRemove);
                 gradeSheet.CourseworkWeightedTables
                     .ForEach(s => s.weights.Remove(gradeSheet.GetCoursework(toRemove).Object));
+                gradeSheet.Coursework.RemoveAll(s => s.Name == toRemove);
                 gradeTable.DeleteCourseworkCollumn(toRemove);
             }
             data.Save();

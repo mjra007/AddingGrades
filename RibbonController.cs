@@ -82,28 +82,14 @@ namespace AddinGrades
             {
                 Program.LoggerPanel?.WriteLineToPanel("No active workbook or sheet was found.");
                 return;
-            }
-
+            } 
             if ((app.ActiveSheet as Worksheet).GetCustomID() is not null)
             {
                 Program.LoggerPanel?.WriteLineToPanel("This worksheet is already a grade sheet!");
                 return;
             }
-
-            Program.CreationOfGradeSheetInProgress = true;
-            WorkbookData data = app.LoadWorkbookData().IfNullCreate();
-            //Add custom ID to gradeSheet if not created already
-            Worksheet worksheet = app.ActiveSheet as Worksheet;
-            string gradeSheetID = worksheet.GetCustomID();
-            gradeSheetID ??= worksheet.CreateCustomID();
-            //create gradesheet in workbookdata
-            GradeSheet gradeSheet = new();
-            gradeSheet.CourseworkWeightedTables.Add(new CourseworkWeightedTable("Default", gradeSheet.Coursework,
-                Enumerable.Repeat(0d, gradeSheet.Coursework.Count).ToArray()));
-            data.GradeSheets.Add(gradeSheetID, gradeSheet);
-            data.Save();
-            new GradeTable(gradeSheetID).CreateDefaultTable(data, app); 
-            Program.CreationOfGradeSheetInProgress = false;
+            CreateGradeSheet form = new();
+            form.Show(); 
         } 
     }
 }
