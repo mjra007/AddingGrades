@@ -47,8 +47,7 @@ namespace AddinGrades
             gradeSheet.CourseworkWeightedTables.Add(new CourseworkWeightedTable("Default", gradeSheet.Coursework,
                 Enumerable.Repeat(0d, gradeSheet.Coursework.Count).ToArray()));
             data.GradeSheets.Add(gradeSheetID, gradeSheet);
-            data.Save();
-
+            data.Save(); 
             if (classesDropDown.SelectedItem is null)
             {
                 new GradeTable(gradeSheetID).CreateDefaultTable(data, app, new List<string>());
@@ -59,6 +58,7 @@ namespace AddinGrades
                 new GradeTable(gradeSheetID).CreateDefaultTable(data, app, studentNames);
             }
             Program.CreationOfGradeSheetInProgress = false;
+
             this.Close();
         }
 

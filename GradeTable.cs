@@ -82,6 +82,18 @@ namespace AddinGrades
             worksheet.Columns.AutoFit();
             if(!studentNames.Any())
                 worksheet.Columns[1].ColumnWidth = 25;
+
+            Program.InsertStudentGradeFormulas(worksheet.get_Range("A3", $"A{3 + studentNames.Count() - 1}"));
+
+            //Create feedback sheet if needed
+            if(data.FeedbackSheetID is null)
+            { 
+                Worksheet feedbackWorksheet = app.ActiveWorkbook.Worksheets.Add();
+                data.FeedbackSheetID = feedbackWorksheet.CreateCustomID();
+                data.Save();
+                FeedbackTable feedbackTable = new(gradeSheetID: data.FeedbackSheetID);
+                feedbackTable.CreateTable(studentNames);
+            } 
             worksheet.Protect();
         }
 
@@ -106,9 +118,9 @@ namespace AddinGrades
                 double knowledge = 0d;
                 foreach ((string courseworkName, object grade) in courseworkGradesZipped)
                 {
-                    if (grade is double)
+                    if (grade is double gradeDouble)
                     {
-                        knowledge += Math.Ceiling((double)grade) * tableWeights[app.GetCoursework(courseworkName).Object];
+                        knowledge += Math.Ceiling(gradeDouble) * tableWeights[app.GetCoursework(courseworkName).Object];
                     }
                 }
                 return Math.Ceiling(knowledge);
@@ -349,6 +361,29 @@ namespace AddinGrades
             }
         }
 
+        public string GenerateGradeString()
+        {
+            Application app = ExcelDnaUtil.Application as Application;
+            Worksheet worksheet = app.ActiveSheet as Worksheet;
+            Range currentCell = worksheet.get_Range("A3");
+            StringBuilder sb = new();
+            string knowledgeColumn = Utils.GetExcelColumnName(GetCollumnByNameIndex(CollumnName.Knowledge)); 
+            string finalGradeColumn = Utils.GetExcelColumnName(GetCollumnByNameIndex(CollumnName.FinalGrade)); 
+            string atitudesColumn = Utils.GetExcelColumnName(GetCollumnByNameIndex(CollumnName.Atitudes));
+            for (int i = 3; i < FindLastStudentRow(); i++)
+            {
+                if (string.IsNullOrEmpty(currentCell.Cells[1].Value2) is false)
+                {
+                    string atitudesValue = worksheet.get_Range($"{atitudesColumn}{i}").Value2.ToString();
+                    string knowledgeValue = worksheet.get_Range($"{knowledgeColumn}{i}").Value2.ToString(); 
+                    string finalGradeValue = worksheet.get_Range($"{finalGradeColumn}{i}").Value2.ToString();
+                    sb.AppendLine($"{currentCell.Cells[1]},{atitudesValue},{atitudesValue},{atitudesValue},{knowledgeValue},{knowledgeValue},{knowledgeValue},{knowledgeValue},{ knowledgeValue},{knowledgeValue},{finalGradeValue}");
+                }
+                currentCell = currentCell.Offset[1, 0];
+            }
+            return sb.ToString();
+        }
+
         //public void RecalculateGrades()
         //{
         //    Worksheet sheet = Utils.GetWorksheetById(GradeSheetID);
@@ -358,28 +393,28 @@ namespace AddinGrades
         //    string weightedTableCollumnName = Utils.GetExcelColumnName(GetCollumnByNameIndex("Coursework Weight Table") + 1);
         //    int firstRow = 3;
 
-        //    Range cellTable = sheet.get_Range($"{weightedTableCollumnName}{firstRow}");
-        //    var gradeSheet = Utils.GetExcelApplication().LoadWorkbookData().GradeSheets[GradeSheetID];
+                    //    Range cellTable = sheet.get_Range($"{weightedTableCollumnName}{firstRow}");
+                    //    var gradeSheet = Utils.GetExcelApplication().LoadWorkbookData().GradeSheets[GradeSheetID];
 
-        //    int currentRow = firstRow;
-        //    Range cellAluno = sheet.get_Range($"{alunoCollumnName}{currentRow}");
-        //    while (string.IsNullOrEmpty(cellAluno.Value2) == false)
-        //    {
-        //        Range cellKnowledge = sheet.get_Range($"{knowledgeCollumnName}{currentRow}");
-        //        CourseworkWeightedTable table = gradeSheet.GetWeightedTable(cellTable.Value2).Object;
-        //        double knowledge = 0d;
-        //        foreach ((Coursework coursework, double weight) in table.weights)
-        //        {
-        //            string collumnName = Utils.GetExcelColumnName(GetCollumnByNameIndex(coursework.Name) + 1);
-        //            double courseworkGrade = sheet.get_Range($"{collumnName}{currentRow}").Value2;
-        //            knowledge += Math.Round(courseworkGrade) * weight;
-        //        }
-        //        cellKnowledge.Value2 = Math.Round(knowledge);
+                    //    int currentRow = firstRow;
+                    //    Range cellAluno = sheet.get_Range($"{alunoCollumnName}{currentRow}");
+                    //    while (string.IsNullOrEmpty(cellAluno.Value2) == false)
+                    //    {
+                    //        Range cellKnowledge = sheet.get_Range($"{knowledgeCollumnName}{currentRow}");
+                    //        CourseworkWeightedTable table = gradeSheet.GetWeightedTable(cellTable.Value2).Object;
+                    //        double knowledge = 0d;
+                    //        foreach ((Coursework coursework, double weight) in table.weights)
+                    //        {
+                    //            string collumnName = Utils.GetExcelColumnName(GetCollumnByNameIndex(coursework.Name) + 1);
+                    //            double courseworkGrade = sheet.get_Range($"{collumnName}{currentRow}").Value2;
+                    //            knowledge += Math.Round(courseworkGrade) * weight;
+                    //        }
+                    //        cellKnowledge.Value2 = Math.Round(knowledge);
 
-        //        currentRow++;
-        //        cellAluno = sheet.get_Range($"{alunoCollumnName}{currentRow}");
-        //    }
-        //    sheet.Protect();
-        //}
+                    //        currentRow++;
+                    //        cellAluno = sheet.get_Range($"{alunoCollumnName}{currentRow}");
+                    //    }
+                    //    sheet.Protect();
+                    //}
     }
 }

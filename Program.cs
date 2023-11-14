@@ -44,25 +44,30 @@ namespace AddinGrades
         {
             if(CreationOfGradeSheetInProgress is false && 
                 Target.Column == 1 && Utils.GetCurrentSheetID() != null)//This is a change in the alunos column
-            { 
-                if(Target.Value2 is object[,])
-                { 
-                    GradeTable table = new(Utils.GetCurrentSheetID());
-                    
-                    foreach (Range range in Target.Rows)
-                    {
-                        table.InsertDropdownForWeightedTable(range.Row);
-                        table.InsertKnowledgeFunction(range.Row);
-                        table.InsertFinalGrade(range.Row);
-                    }
-                }
-                else if(Target.Value2 is string && string.IsNullOrEmpty(Target.Value2) is false)
+            {
+                InsertStudentGradeFormulas(Target);
+            }
+        }
+
+        public static void InsertStudentGradeFormulas(Range Target)
+        {
+            if (Target.Value2 is object[,])
+            {
+                GradeTable table = new(Utils.GetCurrentSheetID());
+
+                foreach (Range range in Target.Rows)
                 {
-                    GradeTable table = new GradeTable(Utils.GetCurrentSheetID());
-                    table.InsertKnowledgeFunction(Target.Row);
-                    table.InsertDropdownForWeightedTable(Target.Row);
-                    table.InsertFinalGrade(Target.Row);
+                    table.InsertDropdownForWeightedTable(range.Row);
+                    table.InsertKnowledgeFunction(range.Row);
+                    table.InsertFinalGrade(range.Row);
                 }
+            }
+            else if (Target.Value2 is string && string.IsNullOrEmpty(Target.Value2) is false)
+            {
+                GradeTable table = new GradeTable(Utils.GetCurrentSheetID());
+                table.InsertKnowledgeFunction(Target.Row);
+                table.InsertDropdownForWeightedTable(Target.Row);
+                table.InsertFinalGrade(Target.Row);
             }
         }
     }

@@ -8,6 +8,8 @@ using Microsoft.Office.Interop.Excel;
 using Application = Microsoft.Office.Interop.Excel.Application;
 using Range = Microsoft.Office.Interop.Excel.Range;
 using AddinGrades.DTO;
+using static AddinGrades.GradeTable;
+using System.Text;
 
 namespace AddinGrades
 {
@@ -22,9 +24,9 @@ namespace AddinGrades
         <tabs>
           <tab id='tab1' label='Grades Plugin'>
             <group id='group1' label='GradeSheet Controls'>
-              <button id='gradeSheetButton' imageMso='MicrosoftVisualFoxPro'  label='Make this worksheet a gradesheet' onAction='OnGradeSheetCreatePressed' size='large'/>
-              <button id='addCoursework' imageMso='SourceControlAddObjects'  label='Add/Remove coursework' onAction='OnAddCoursework' size='large'/>
-              <button id='manageCourseworkWeights' imageMso='FunctionWizard'  label='Manage Coursework Weights' onAction='OnManageCourseworkWeights' size='large'/>            
+              <button id='gradeSheetButton' imageMso='MicrosoftVisualFoxPro' label='Make this worksheet a gradesheet' onAction='OnGradeSheetCreatePressed' size='large'/>
+              <button id='addCoursework' imageMso='SourceControlAddObjects' label='Add/Remove coursework' onAction='OnAddCoursework' size='large'/>
+              <button id='manageCourseworkWeights' imageMso='FunctionWizard' label='Manage Coursework Weights' onAction='OnManageCourseworkWeights' size='large'/>            
             </group >
             <group id ='group2' label='Utilities'>
               <button id='UnlockLock' imageMso='Lock'  label='Unlock or Lock sheet' onAction='UnlockSheet' size='large'/>  
@@ -38,7 +40,19 @@ namespace AddinGrades
 
         public void OnCopyGradeString(IRibbonControl control)
         {
-            var sheet = Utils.GetWorksheetById(Utils.GetCurrentSheetID());
+            if (Utils.IsEditing(Utils.GetExcelApplication()))
+                return;
+            if(Utils.GetCurrentSheetID() is null)
+            {
+                Program.LoggerPanel.WriteLineToPanel("This is not a gradesheet");
+                return;
+            }
+            GradeTable gradeSheet = new(Utils.GetCurrentSheetID());
+            string gradeString = gradeSheet.GenerateGradeString();
+            if (gradeString is not null && string.IsNullOrEmpty(gradeString) == false)
+            { 
+                Clipboard.SetText(gradeString);
+            }
         }
 
 
@@ -91,5 +105,6 @@ namespace AddinGrades
             CreateGradeSheet form = new();
             form.Show(); 
         } 
+         
     }
 }
