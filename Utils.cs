@@ -15,7 +15,8 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using Application = Microsoft.Office.Interop.Excel.Application;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView; 
+using Range = Microsoft.Office.Interop.Excel.Range;
 
 namespace AddinGrades
 {
@@ -67,7 +68,7 @@ namespace AddinGrades
                 return sheet.GetProperty("CustomID");
             }
             return null; 
-        }
+        } 
 
         public static WorkbookData IfNullCreate(this WorkbookData data)
         {
@@ -85,11 +86,32 @@ namespace AddinGrades
             application.ActiveWorkbook.CustomXMLParts.Add(WorkbookData.Serialize(new WorkbookData()));
         }
 
-        public static string CreateCustomID(this Worksheet worksheet)
+        public static string CreateCustomID(this Worksheet worksheet, bool feedbackSheet = false)
         {
             string gradeSheetID;
             worksheet.CustomProperties.Add("CustomID", gradeSheetID = Guid.NewGuid().ToString());
+            if(feedbackSheet)
+                worksheet.CustomProperties.Add("FeedbackSheet", feedbackSheet.ToString());
             return gradeSheetID;
+        }
+
+        public static bool IsFeedback()
+        {
+            Worksheet sheet = GetExcelApplication().ActiveSheet as Worksheet;
+            if (sheet.CustomProperties.Cast<CustomProperty>().Any(c => c.Name == "FeedbackSheet"))
+            {
+                return bool.Parse(sheet.GetProperty("FeedbackSheet"));
+            }
+            return false;
+        }
+
+        public static bool IsFeedback(this Worksheet sheet)
+        { 
+            if (sheet.CustomProperties.Cast<CustomProperty>().Any(c => c.Name == "FeedbackSheet"))
+            {
+                return bool.Parse(sheet.GetProperty("FeedbackSheet"));
+            }
+            return false;
         }
 
         public static string? GetCustomID(this Worksheet sheet)
@@ -97,6 +119,16 @@ namespace AddinGrades
             if (sheet.CustomProperties.Cast<CustomProperty>().Any(c => c.Name == "CustomID"))
             {
                 return sheet.GetProperty("CustomID");
+            }
+            return null;
+        }
+
+        public static Worksheet? GetFeedbackSheet()
+        {
+            Application app = ExcelDnaUtil.Application as Application;
+            foreach (Worksheet worksheet in app.Sheets)
+            {
+                return worksheet.IsFeedback() ? worksheet : null;
             }
             return null;
         }
@@ -117,7 +149,7 @@ namespace AddinGrades
                 if (sheet.GetCustomID().Equals(gradeID)) return sheet;
             }
             return null;
-        }
+        } 
 
         public static void SetProperty(this Worksheet ws, string name, string value)
         {
@@ -193,5 +225,39 @@ namespace AddinGrades
                 yield return searchContext.FindElements(By.TagName("td"))[2].Text;
         }
 
+        public static int GetCollumnByNameIndex(string sheetID, string courseworkName, string firstCell = "A2")
+        {
+            Worksheet worksheet = Utils.GetWorksheetById(sheetID);
+            Range currentCell = worksheet.get_Range(firstCell);
+            int counter = 0;
+
+            while (currentCell.Value2 != courseworkName)
+            {
+                string c = currentCell.Value2;
+                currentCell = currentCell.Offset[0, 1];
+                counter++;
+            };
+            return counter;
+        }
+
+        public static int? GetRowByNameIndex(string sheetID, string studentName,string columnName, int limit = 50)
+        {
+            Worksheet worksheet = Utils.GetWorksheetById(sheetID);
+            Range currentCell = worksheet.get_Range($"{columnName}1");
+            int counter = 0;
+            bool found;
+            while (found = currentCell.Value2 != studentName)
+            {
+                string c = currentCell.Value2;
+                currentCell = currentCell.Offset[1, 0];
+                if(counter == limit)
+                {
+                    return null;
+                }
+                counter++;
+            };
+            return found == false ? counter : null;
+
+        }
     }
 }

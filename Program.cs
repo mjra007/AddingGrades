@@ -41,9 +41,9 @@ namespace AddinGrades
         }
 
         private void OnSheetChange(object Sh, Range Target)
-        {
-            if(CreationOfGradeSheetInProgress is false && 
-                Target.Column == 1 && Utils.GetCurrentSheetID() != null)//This is a change in the alunos column
+        { 
+            if (Utils.IsFeedback() is false && Utils.GetCurrentSheetID() != null && CreationOfGradeSheetInProgress is false &&
+                Target.Column == 1)//This is a change in the alunos column
             {
                 InsertStudentGradeFormulas(Target);
             }
@@ -60,6 +60,7 @@ namespace AddinGrades
                     table.InsertDropdownForWeightedTable(range.Row);
                     table.InsertKnowledgeFunction(range.Row);
                     table.InsertFinalGrade(range.Row);
+                    table.InsertFeedback(range.Row);
                 }
             }
             else if (Target.Value2 is string && string.IsNullOrEmpty(Target.Value2) is false)
@@ -67,7 +68,8 @@ namespace AddinGrades
                 GradeTable table = new GradeTable(Utils.GetCurrentSheetID());
                 table.InsertKnowledgeFunction(Target.Row);
                 table.InsertDropdownForWeightedTable(Target.Row);
-                table.InsertFinalGrade(Target.Row);
+                table.InsertFinalGrade(Target.Row); 
+                table.InsertFeedback(Target.Row);
             }
         }
     }

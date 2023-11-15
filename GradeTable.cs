@@ -59,6 +59,27 @@ namespace AddinGrades
         public void CreateDefaultTable(WorkbookData data, Application app, IEnumerable<string> studentNames)
         {
             Worksheet worksheet = app.ActiveSheet as Worksheet;
+
+            //Create feedback sheet if needed
+            if (data.FeedbackSheetID is null)
+            {
+                Worksheet feedbackWorksheet = app.ActiveWorkbook.Worksheets.Add();
+                data.FeedbackSheetID = feedbackWorksheet.CreateCustomID(true);
+                data.Save();
+                FeedbackTable feedbackTable = new(data.FeedbackSheetID);
+                feedbackTable.CreateTable(studentNames);
+            }
+            else
+            {
+                Worksheet? feedbackWorksheet = Utils.GetFeedbackSheet();
+                if(feedbackWorksheet is not null)
+                {
+                    string lastCollumnName = Utils.GetExcelColumnName(GetLastHeaderCollumnWithValue() + 1);
+                    feedbackWorksheet.get_Range($"{lastCollumnName}1").Value = worksheet.Name;
+                } 
+            }
+
+            worksheet.Select();
             Range currentCell = worksheet.get_Range("A2");
 
             foreach (string columnName in DefaultColumns)
@@ -77,23 +98,13 @@ namespace AddinGrades
             foreach (string name in studentNames)
             {
                 currentCell.Cells[1] = name;
-                currentCell = currentCell.Offset[1, 0];
+                currentCell = currentCell.Offset[1, 0];  
             }
             worksheet.Columns.AutoFit();
             if(!studentNames.Any())
                 worksheet.Columns[1].ColumnWidth = 25;
 
             Program.InsertStudentGradeFormulas(worksheet.get_Range("A3", $"A{3 + studentNames.Count() - 1}"));
-
-            //Create feedback sheet if needed
-            if(data.FeedbackSheetID is null)
-            { 
-                Worksheet feedbackWorksheet = app.ActiveWorkbook.Worksheets.Add();
-                data.FeedbackSheetID = feedbackWorksheet.CreateCustomID();
-                data.Save();
-                FeedbackTable feedbackTable = new(gradeSheetID: data.FeedbackSheetID);
-                feedbackTable.CreateTable(studentNames);
-            } 
             worksheet.Protect();
         }
 
@@ -103,7 +114,7 @@ namespace AddinGrades
              [ExcelArgument(AllowReference = true, Name = "courseworkValue")] object courseworkGradesRange,
              [ExcelArgument(AllowReference = true, Name = "courseworkName")] object courseworkNameRange,
              [ExcelArgument(AllowReference = true, Name = "tableRange")] object table)
-        {
+        { 
             var courseworkGrades = (XlCall.Excel(XlCall.xlCoerce, courseworkGradesRange, (int)XlType12.XlTypeArray) as object[,]).Cast<object>();
             var courseworkNames = (XlCall.Excel(XlCall.xlCoerce, courseworkNameRange, (int)XlType12.XlTypeArray) as object[,]).Cast<string>();
             string tableWeightsName = (string)XlCall.Excel(XlCall.xlCoerce, table, (int)XlType12.XlTypeString);
@@ -138,6 +149,30 @@ namespace AddinGrades
             return Math.Ceiling(knowledgeGrade * 0.85 + Math.Ceiling(atitudesGrade) * 0.15);
         }
 
+        public static string cacheFeedbackSheetID;
+        [ExcelFunction(IsMacroType = true)]
+        public static string GrabFeedbackFor([ExcelArgument(AllowReference = true, Name = "studentName")] object studentName)
+        { 
+            string studentNameString = (string)XlCall.Excel(XlCall.xlCoerce, studentName, (int)XlType12.XlTypeString);
+            string sheetName = ((string)XlCall.Excel(XlCall.xlSheetNm, studentName, (int)XlType12.XlTypeString)).Split(']')[1];
+            cacheFeedbackSheetID ??= Utils.GetExcelApplication().LoadWorkbookData().FeedbackSheetID; 
+
+            int? rowIndex = Utils.GetRowByNameIndex(cacheFeedbackSheetID, studentNameString, "A");
+            if (rowIndex == null) return string.Empty;
+
+            string courseworkFeedbackCollumn = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(cacheFeedbackSheetID, sheetName, "A1")+1);
+            dynamic value = Utils.GetWorksheetById(cacheFeedbackSheetID).get_Range($"{courseworkFeedbackCollumn}{rowIndex+1}").Value2;
+            if (value is not null)
+            {
+                return value.ToString();
+            }
+            else
+            {
+                return string.Empty;
+            } 
+        }
+
+
         public void InsertFinalGrade(int row)
         {
             string finalGradeCollumnName = Utils.GetExcelColumnName(GetCollumnByNameIndex(CollumnName.FinalGrade) + 1);
@@ -171,6 +206,7 @@ namespace AddinGrades
             string courseworkWeightedTableName = Utils.GetExcelColumnName(GetCollumnByNameIndex(CollumnName.CourseworkWeigthtedTable) + 1);
             string lastCourseworkCollumnName = Utils.GetExcelColumnName(GetCollumnByNameIndex(CollumnName.Knowledge));
             string firstCourseworkCollumnName = Utils.GetExcelColumnName(GetCollumnByNameIndex(CollumnName.Student) + 2);
+            if (firstCourseworkCollumnName == knowledgeCollumnName) return;
             Utils.GetWorksheetById(GradeSheetID).get_Range($"{knowledgeCollumnName}{row}").Formula = $"=CalculateKnowledge({firstCourseworkCollumnName}{row}:{lastCourseworkCollumnName}{row},{firstCourseworkCollumnName}2:{lastCourseworkCollumnName}2, {courseworkWeightedTableName}{row})";
         }
 
@@ -194,6 +230,11 @@ namespace AddinGrades
             }
         }
 
+        public void InsertFeedback(int row)
+        { 
+            string feedbackCollumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(GradeSheetID, CollumnName.Feedback) + 1);
+            Utils.GetWorksheetById(GradeSheetID).get_Range($"{feedbackCollumnName}{row}").Formula = $"=GrabFeedbackFor(A{row})";
+        }
         public void InsertDropdownForWeightedTable(int row)
         {
             Worksheet sheet = Utils.GetWorksheetById(GradeSheetID);
@@ -341,6 +382,23 @@ namespace AddinGrades
         {
             return GetCourseworkIndex(name);
         }
+
+          
+        public static int GetLastHeaderCollumnWithValue(string firstCell = "A1")
+        {
+            Worksheet worksheet = Utils.GetFeedbackSheet();
+            Range currentCell = worksheet.get_Range(firstCell);
+            int counter = 0;
+
+            while (currentCell.Value2 is not null)
+            {
+                string c = currentCell.Value2;
+                currentCell = currentCell.Offset[0, 1];
+                counter++;
+            };
+            return counter;
+        }
+
 
         public static void RunMacro(params object[] args)
         {
