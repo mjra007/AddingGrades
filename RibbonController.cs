@@ -31,6 +31,7 @@ namespace AddinGrades
             <group id ='group2' label='Utilities'>
               <button id='UnlockLock' imageMso='Lock'  label='Unlock or Lock sheet' onAction='UnlockSheet' size='large'/>  
               <button id='CopyGradeString' imageMso='Copy' label='Copy grades csv string' onAction='OnCopyGradeString' size='large'/>
+              <button id='CopyFeedbackString' imageMso='Copy' label='Copy feedback csv string' onAction='OnCopyFeedbackString' size='large'/>
             </group>
           </tab>
         </tabs>
@@ -47,6 +48,11 @@ namespace AddinGrades
                 Program.LoggerPanel.WriteLineToPanel("This is not a gradesheet");
                 return;
             }
+            if (Utils.IsFeedback())
+            {
+                Program.LoggerPanel.WriteLineToPanel("This is not a gradesheet");
+                return;
+            }
             GradeTable gradeSheet = new(Utils.GetCurrentSheetID());
             string gradeString = gradeSheet.GenerateGradeString();
             if (gradeString is not null && string.IsNullOrEmpty(gradeString) == false)
@@ -54,10 +60,40 @@ namespace AddinGrades
                 Clipboard.SetText(gradeString);
             }
         }
-
+        public void OnCopyFeedbackString(IRibbonControl control)
+        {
+            if (Utils.IsEditing(Utils.GetExcelApplication()))
+                return;
+            if (Utils.GetCurrentSheetID() is null)
+            {
+                Program.LoggerPanel.WriteLineToPanel("This is not a gradesheet");
+                return;
+            }
+            if (Utils.IsFeedback())
+            {
+                Program.LoggerPanel.WriteLineToPanel("This is not a gradesheet");
+                return;
+            }
+            GradeTable gradeSheet = new(Utils.GetCurrentSheetID());
+            string gradeString = gradeSheet.GenerateFeedbackString();
+            if (gradeString is not null && string.IsNullOrEmpty(gradeString) == false)
+            {
+                Clipboard.SetText(gradeString);
+            }
+        }
 
         public void UnlockSheet(IRibbonControl control)
         {
+            if (Utils.GetCurrentSheetID() is null)
+            {
+                Program.LoggerPanel.WriteLineToPanel("This is not a gradesheet");
+                return;
+            }
+            if (Utils.IsFeedback())
+            {
+                Program.LoggerPanel.WriteLineToPanel("This is not a gradesheet");
+                return;
+            }
             var sheet = Utils.GetWorksheetById(Utils.GetCurrentSheetID());
             if (sheet.ProtectContents)
             {
@@ -73,6 +109,16 @@ namespace AddinGrades
         {
             if (Utils.IsEditing(Utils.GetExcelApplication()))
                 return;
+            if (Utils.GetCurrentSheetID() is null)
+            {
+                Program.LoggerPanel.WriteLineToPanel("This is not a gradesheet");
+                return;
+            }
+            if (Utils.IsFeedback())
+            {
+                Program.LoggerPanel.WriteLineToPanel("This is not a gradesheet");
+                return;
+            }
             ManageCourseworkWeight form = new(Utils.GetCurrentSheetID());
             form.Show();
         }
@@ -81,6 +127,16 @@ namespace AddinGrades
         {
             if (Utils.IsEditing(Utils.GetExcelApplication()))
                 return;
+            if (Utils.GetCurrentSheetID() is null)
+            {
+                Program.LoggerPanel.WriteLineToPanel("This is not a gradesheet");
+                return;
+            }
+            if (Utils.IsFeedback())
+            {
+                Program.LoggerPanel.WriteLineToPanel("This is not a gradesheet");
+                return;
+            }
             AddCoursework form = new(Utils.GetCurrentSheetID());
             form.Show();
         }

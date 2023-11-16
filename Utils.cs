@@ -145,7 +145,7 @@ namespace AddinGrades
         {
             Application app = GetExcelApplication();
             foreach (Worksheet sheet in app.Worksheets)
-            {
+            { 
                 if (sheet.GetCustomID().Equals(gradeID)) return sheet;
             }
             return null;
@@ -240,6 +240,20 @@ namespace AddinGrades
             return counter;
         }
 
+        public static int GetCollumnByNameIndex(Worksheet sheet, string courseworkName, string firstCell = "A2")
+        { 
+            Range currentCell = sheet.get_Range(firstCell);
+            int counter = 0;
+
+            while (currentCell.Value2 != courseworkName)
+            {
+                string c = currentCell.Value2;
+                currentCell = currentCell.Offset[0, 1];
+                counter++;
+            };
+            return counter;
+        }
+
         public static int? GetRowByNameIndex(string sheetID, string studentName,string columnName, int limit = 50)
         {
             Worksheet worksheet = Utils.GetWorksheetById(sheetID);
@@ -256,8 +270,25 @@ namespace AddinGrades
                 }
                 counter++;
             };
-            return found == false ? counter : null;
+            return found == false ? counter : null; 
+        }
 
+        public static int? GetRowByNameIndex(Worksheet worksheet, string rowValue, string columnName, int limit = 50)
+        { 
+            Range currentCell = worksheet.get_Range($"{columnName}1");
+            int counter = 0;
+            bool found;
+            while (found = currentCell.Value2 != rowValue)
+            {
+                string c = currentCell.Value2;
+                currentCell = currentCell.Offset[1, 0];
+                if (counter == limit)
+                {
+                    return null;
+                }
+                counter++;
+            };
+            return found == false ? counter : null;
         }
     }
 }
