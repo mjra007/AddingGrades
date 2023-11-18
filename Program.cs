@@ -23,8 +23,7 @@ namespace AddinGrades
             var ctp = CustomTaskPaneFactory.CreateCustomTaskPane(LoggerPanel, "Grades addin console");
             ctp.Visible = true;
             ctp.DockPosition = MsoCTPDockPosition.msoCTPDockPositionTop;
-            ctp.Height = 80;
-            //Utils.GetExcelApplication().WorkbookOpen += OpenWorkbook;
+            ctp.Height = 80; 
             Utils.GetExcelApplication().WorkbookActivate += OpenWorkbook;
             Utils.GetExcelApplication().WorkbookBeforeClose += BeforeCloseWorkbook;
         }
@@ -40,7 +39,7 @@ namespace AddinGrades
             Utils.GetExcelApplication().ActiveWorkbook.SheetChange += OnSheetChange;
         }
 
-        private void OnSheetChange(object Sh, Range Target)
+        public static void OnSheetChange(object Sh, Range Target)
         { 
             if (Utils.IsFeedback() is false && Utils.GetCurrentSheetID() != null && CreationOfGradeSheetInProgress is false &&
                 Target.Column == 1)//This is a change in the alunos column

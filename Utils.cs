@@ -191,12 +191,15 @@ namespace AddinGrades
             try
             {
                 driver.Navigate().GoToUrl("https://jobra.eschoolingserver.com/DesktopDefault.aspx?tabindex=1&tabid=245&portalId=0");
-                driver.OpenClass(className);
+                var firstWindow = driver.WindowHandles.First();
+                driver.OpenClass(className); ;
                 var windowClasss = driver.WindowHandles.Last();
-                driver.SwitchTo().Window(driver.WindowHandles.Last()); 
+                driver.SwitchTo().Window(windowClasss); 
                 driver.FindElement(By.Id("__tab_ctl00_editContentPlaceHolder_Tabs_tp3")).Click();
                 studentNames.AddRange( driver.FindElements(By.CssSelector("div[class='divImgStudent']")).Select(s => s.FindElement(By.TagName("a")).GetAttribute("title")).ToList()); 
                 driver.Close();
+                driver.SwitchTo().Window(firstWindow);
+                driver.Close(); 
             }
             catch (Exception ex)
             {
@@ -222,7 +225,7 @@ namespace AddinGrades
         {
             driver.Navigate().GoToUrl("https://jobra.eschoolingserver.com/DesktopDefault.aspx?tabindex=1&tabid=245&portalId=0");
             foreach (ISearchContext searchContext in new WebDriverWait((IWebDriver)driver, TimeSpan.FromSeconds(10.0)).Until<IWebElement>(ExpectedConditions.ElementExists(By.Id("table_387_divTable"))).FindElements(By.TagName("tr")).Skip<IWebElement>(1))
-                yield return searchContext.FindElements(By.TagName("td"))[2].Text;
+                yield return searchContext.FindElements(By.TagName("td"))[2].Text; 
         }
 
         public static int GetCollumnByNameIndex(string sheetID, string courseworkName, string firstCell = "A2")
@@ -257,6 +260,7 @@ namespace AddinGrades
         public static int? GetRowByNameIndex(string sheetID, string studentName,string columnName, int limit = 50)
         {
             Worksheet worksheet = Utils.GetWorksheetById(sheetID);
+            if (worksheet is null) return null;
             Range currentCell = worksheet.get_Range($"{columnName}1");
             int counter = 0;
             bool found;
