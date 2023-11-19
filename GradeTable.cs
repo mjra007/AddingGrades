@@ -157,20 +157,21 @@ namespace AddinGrades
             }
         }
 
-        [ExcelCommand()]
+        [ExcelFunction()]
         public static double CalculateKnowledge(
              [ExcelArgument(AllowReference = true, Name = "courseworkValue")] object courseworkGradesRange,
              [ExcelArgument(AllowReference = true, Name = "courseworkName")] object courseworkNameRange,
-             [ExcelArgument(AllowReference = true, Name = "tableRange")] object table)
+             [ExcelArgument(AllowReference = false, Name = "tableRange")] object table)
         {
             IEnumerable<object> courseworkGrades = ((object[,])((ExcelReference)courseworkGradesRange).GetValue()).Cast<object>();
             IEnumerable<string> courseworkNames = ((object[,])((ExcelReference)courseworkNameRange).GetValue()).Cast<string>();
-            string tableWeightsName = ((ExcelReference)table).GetValue() as string;
- 
+            string? tableWeightsName = table as string;
+
+
             Dictionary<string, object> courseworkGradesZipped = courseworkNames.Zip(courseworkGrades, (key, value) => new { key, value }).ToDictionary(x => x.key, x => x.value);
 
             var app = Utils.GetExcelApplication().LoadWorkbookData().GradeSheets[Utils.GetCurrentSheetID()];
-            if(tableWeightsName is not null && app.GetWeightedTable(tableWeightsName).IsSuccess)
+            if(string.IsNullOrEmpty(tableWeightsName) == false  && app.GetWeightedTable(tableWeightsName).IsSuccess)
             {
                 SerializableDictionary<Coursework, double> tableWeights = app.GetWeightedTable(tableWeightsName).Object.weights;
 
@@ -187,7 +188,7 @@ namespace AddinGrades
             return -1;
         }
 
-        [ExcelCommand()]
+        [ExcelFunction()]
         public static double CalculateFinalGrade(
              [ExcelArgument(AllowReference = true, Name = "knowledge")] object knowledge,
              [ExcelArgument(AllowReference = true, Name = "atitudes")] object atitude)
@@ -222,7 +223,7 @@ namespace AddinGrades
             } 
         }
 
-        [ExcelCommand()]
+        [ExcelFunction()]
         public static string GetSheetName([ExcelArgument( Name = "sheetID")] object sheetID)
         {
             string? sheetIDString = sheetID as string;
@@ -234,7 +235,7 @@ namespace AddinGrades
             return string.Empty;
         }
 
-        [ExcelCommand()]
+        [ExcelFunction(IsMacroType =true)]
         public static string GetFinalGrade([ExcelArgument(AllowReference = true, Name = "sheetName")] object sheetName,
             [ExcelArgument(AllowReference = true, Name = "studentName")] object studentName)
         {
