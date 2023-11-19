@@ -15,6 +15,8 @@ namespace AddinGrades
     public partial class ManageCourseworkWeight : Form
     {
         public readonly string GradeSheetID;
+        public EventHandler<string> CourseworkDeleteEvent;
+        public EventHandler<(string, double)> CourseworkAddEvent;
 
         public ManageCourseworkWeight(string gradeSheetID)
         {
@@ -22,6 +24,8 @@ namespace AddinGrades
             InitializeComponent();
             WorkbookData data = Utils.GetExcelApplication().LoadWorkbookData();
             data.GradeSheets[GradeSheetID].CourseworkWeightedTables.ForEach(s => tablesList.Items.Add(s.name));
+            CourseworkDeleteEvent += new EventHandler<string>(OnCourseworkDelete);
+            CourseworkAddEvent += new EventHandler<(string, double)>(OnCourseworkAdd);
         }
 
         private void CreateButton_Click(object sender, EventArgs e)
@@ -42,14 +46,53 @@ namespace AddinGrades
 
         private void tablesList_SelectedIndexChanged(object sender, EventArgs e)
         {
+            RefreshListOfCoursework();
+        }
+
+        private void RefreshListOfCoursework()
+        {
             WorkbookData data = Utils.GetExcelApplication().LoadWorkbookData();
             var courseworkAndWeight = data.GradeSheets[GradeSheetID].CourseworkWeightedTables.Find(s => s.name == ((string)tablesList.SelectedItem)).weights;
             flowLayoutPanel1.Controls.Clear();
             foreach (var keyvaluepair in courseworkAndWeight)
             {
                 flowLayoutPanel1.Controls.Add(
-                    new CourseworkWeightControl(keyvaluepair.Key.Name, keyvaluepair.Value*100, (string)tablesList.SelectedItem));
+                    new CourseworkWeightControl(keyvaluepair.Key.Name, keyvaluepair.Value * 100, (string)tablesList.SelectedItem, CourseworkDeleteEvent));
             }
+            flowLayoutPanel1.Controls.Add(new AddNewCoursework(GradeSheetID, CourseworkAddEvent));
+        }
+
+        public void OnCourseworkAdd(object? sender, (string, double) pair)
+        {
+
+            WorkbookData data = Utils.GetExcelApplication().LoadWorkbookData();
+            Coursework newCoursework;
+            data.GradeSheets[GradeSheetID].Coursework.Add(newCoursework = new Coursework(pair.Item1));
+            data.GradeSheets[GradeSheetID].CourseworkWeightedTables.ForEach(s => s.AddCoursework(newCoursework, pair.Item2 /100));
+            data.Save();
+            GradeTable table = new(GradeSheetID);
+            table.InsertNewCoursework(newCoursework);
+            table.InsertDropdownForWeightedTable();
+            table.InsertKnowledgeFunctionForRows();
+            table.LockCollumnsAndHeaders();
+            RefreshListOfCoursework();
+        }
+
+        public void OnCourseworkDelete(object? sender, string courseworkName)
+        {
+            WorkbookData data = Utils.GetExcelApplication().LoadWorkbookData();
+            var gradeTable = new GradeTable(GradeSheetID);
+            var gradeSheet = data.GradeSheets[GradeSheetID];
+            gradeSheet.CourseworkWeightedTables
+                    .ForEach(s => s.weights.Remove(gradeSheet.GetCoursework(courseworkName).Object));
+            gradeSheet.Coursework.RemoveAll(s => s.Name == courseworkName);
+            gradeTable.DeleteCourseworkCollumn(courseworkName);
+            data.Save();
+            flowLayoutPanel1.Controls.Remove(sender as Control);
+            GradeTable table = new(GradeSheetID);
+            table.InsertDropdownForWeightedTable();
+            table.InsertKnowledgeFunctionForRows();
+            table.LockCollumnsAndHeaders();
         }
 
         private void tablesGroup_Enter(object sender, EventArgs e)
@@ -60,11 +103,14 @@ namespace AddinGrades
         private void saveWeightChangesButton_Click(object sender, EventArgs e)
         {
             WorkbookData data = Utils.GetExcelApplication().LoadWorkbookData();
-            foreach (CourseworkWeightControl item in flowLayoutPanel1.Controls.Cast<CourseworkWeightControl>())
+            foreach (Control item in flowLayoutPanel1.Controls)
             {
-                data.GradeSheets[GradeSheetID].GetWeightedTable((string)tablesList.SelectedItem).Object
-                    .ChangeWeight(data.GradeSheets[GradeSheetID].GetCoursework(item.GetCourseworkName()).Object,
-                    double.Parse(item.GetWeight()) / 100);
+                if (item is CourseworkWeightControl courseworkWeight)
+                {
+                    data.GradeSheets[GradeSheetID].GetWeightedTable((string)tablesList.SelectedItem).Object
+                    .ChangeWeight(data.GradeSheets[GradeSheetID].GetCoursework(courseworkWeight.GetCourseworkName()).Object,
+                    double.Parse(courseworkWeight.GetWeight()) / 100);
+                }
             }
             data.Save();
             GradeTable table = new(GradeSheetID);
@@ -74,10 +120,14 @@ namespace AddinGrades
         private void OnTimerTick(object sender, EventArgs e)
         {
             double total = 0d;
-            foreach (CourseworkWeightControl item in flowLayoutPanel1.Controls.Cast<CourseworkWeightControl>())
+            foreach (Control item in flowLayoutPanel1.Controls)
             {
-                if(double.TryParse(item.GetWeight(),out double parsedValue ))
-                    total += parsedValue;
+                if (item is CourseworkWeightControl courseworkWeight)
+                {
+                    if (double.TryParse(courseworkWeight.GetWeight(), out double parsedValue))
+                        total += parsedValue;
+                }
+
             }
 
             groupBox2.Text = $"Total weights: {total}/100";

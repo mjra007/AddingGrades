@@ -46,10 +46,12 @@ namespace AddinGrades
             table.InsertNewCoursework(newCoursework);
             table.InsertDropdownForWeightedTable();
             table.InsertKnowledgeFunctionForRows();
+            table.LockCollumnsAndHeaders();
         }
 
         private void removeCoursework_Click(object sender, EventArgs e)
         {
+            Program.CreationOfGradeSheetInProgress = true;
             WorkbookData data = Utils.GetExcelApplication().LoadWorkbookData();
             var gradeTable = new GradeTable(GradeSheetID);
             var gradeSheet = data.GradeSheets[GradeSheetID];
@@ -63,9 +65,10 @@ namespace AddinGrades
             data.Save();
             this.courseworkList.Items.Clear();
             this.courseworkList.Items.AddRange(gradeSheet.Coursework.Select(s => s.Name).ToArray());
-            GradeTable table = new(GradeSheetID);
-            table.InsertDropdownForWeightedTable();
-            table.InsertKnowledgeFunctionForRows();
+            gradeTable.InsertDropdownForWeightedTable();
+            gradeTable.InsertKnowledgeFunctionForRows();
+            gradeTable.LockCollumnsAndHeaders(); 
+            Program.CreationOfGradeSheetInProgress = false;
         }
 
         private void groupBox1_Enter(object sender, EventArgs e)

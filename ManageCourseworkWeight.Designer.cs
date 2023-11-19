@@ -74,17 +74,18 @@
             saveWeightChangesButton.Name = "saveWeightChangesButton";
             saveWeightChangesButton.Size = new Size(365, 23);
             saveWeightChangesButton.TabIndex = 1;
-            saveWeightChangesButton.Text = "💾 Save Weight Changes";
+            saveWeightChangesButton.Text = " Save Weight Changes";
             saveWeightChangesButton.UseVisualStyleBackColor = true;
             saveWeightChangesButton.Click += saveWeightChangesButton_Click;
             // 
             // flowLayoutPanel1
             // 
+            flowLayoutPanel1.Anchor = AnchorStyles.None;
             flowLayoutPanel1.AutoScroll = true;
             flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
-            flowLayoutPanel1.Location = new Point(6, 22);
+            flowLayoutPanel1.Location = new Point(3, 19);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(365, 394);
+            flowLayoutPanel1.Size = new Size(371, 397);
             flowLayoutPanel1.TabIndex = 0;
             flowLayoutPanel1.WrapContents = false;
             // 
@@ -148,6 +149,8 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(684, 497);
             Controls.Add(groupBox1);
+            MaximumSize = new Size(700, 536);
+            MinimumSize = new Size(700, 536);
             Name = "ManageCourseworkWeight";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "ManageCourseworkWeight";

@@ -99,19 +99,11 @@ namespace AddinGrades
                 currentCell = currentCell.Offset[0, 1];
             }
 
-            string lastColumn = Utils.GetExcelColumnName(DefaultColumns.Count);
-            string feedbackColumnName = Utils.GetExcelColumnName(GetCollumnByNameIndex(CollumnName.Feedback) + 1);
-            string knowledgeCollumnName = Utils.GetExcelColumnName(GetCollumnByNameIndex(CollumnName.Knowledge) + 1);
-            string finalCollumnName = Utils.GetExcelColumnName(GetCollumnByNameIndex(CollumnName.FinalGrade) + 1);
+            string lastColumn = Utils.GetExcelColumnName(DefaultColumns.Count); 
 
-
-            worksheet.get_Range("A3", $"{lastColumn}100").Locked = false;
             worksheet.get_Range("A2", $"{lastColumn}2").Cells.Font.Size = 13;
-            worksheet.get_Range("A2", $"{lastColumn}2").Locked = true;
-            worksheet.get_Range($"{feedbackColumnName}3", $"{feedbackColumnName}100").Locked = true;
-            worksheet.get_Range($"{knowledgeCollumnName}3", $"{knowledgeCollumnName}100").Locked = true;
-            worksheet.get_Range($"{finalCollumnName}3", $"{finalCollumnName}100").Locked = true;
             worksheet.get_Range("A2", $"{lastColumn}2").Interior.Color = ColorTranslator.ToOle(Color.LightGoldenrodYellow);
+            LockCollumnsAndHeaders();
 
             currentCell = worksheet.get_Range("A3");
             foreach (string name in studentNames)
@@ -132,17 +124,49 @@ namespace AddinGrades
             worksheet.Protect();
         }
 
+        public void LockCollumnsAndHeaders()
+        {
+            LockCollumnsAndHeaders(Utils.GetWorksheetById(GradeSheetID));
+        }
 
-        [ExcelFunction(IsMacroType = false, IsVolatile =true)]
+        public static void LockCollumnsAndHeaders(Worksheet worksheet)
+        { 
+            string lastColumn = Utils.GetExcelColumnName(DefaultColumns.Count);
+            string feedbackColumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(worksheet,CollumnName.Feedback) + 1);
+            string knowledgeCollumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(worksheet, CollumnName.Knowledge) + 1);
+            string finalCollumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(worksheet,CollumnName.FinalGrade) + 1);
+
+            //we dont want to change the protection status so if it is protected unprotect and then protect again
+            bool protectAtTheEnd = false;
+            if (worksheet.ProtectContents)
+            {
+                protectAtTheEnd = true;
+                worksheet.Unprotect();
+            }
+            //Unlock all the cells
+            worksheet.get_Range("A1", $"{lastColumn}100").Locked = false;
+            //Lock headers first
+            worksheet.get_Range("A2", $"{lastColumn}2").Locked = true;
+            worksheet.get_Range($"{feedbackColumnName}3", $"{feedbackColumnName}100").Locked = true; 
+            worksheet.get_Range($"{knowledgeCollumnName}3", $"{knowledgeCollumnName}100").Locked = true; 
+            worksheet.get_Range($"{finalCollumnName}3", $"{finalCollumnName}100").Locked = true; 
+            worksheet.Protect();
+            if (protectAtTheEnd)
+            {
+                worksheet.Protect();
+            }
+        }
+
+        [ExcelCommand()]
         public static double CalculateKnowledge(
              [ExcelArgument(AllowReference = true, Name = "courseworkValue")] object courseworkGradesRange,
              [ExcelArgument(AllowReference = true, Name = "courseworkName")] object courseworkNameRange,
              [ExcelArgument(AllowReference = true, Name = "tableRange")] object table)
         {
-            var courseworkGrades = ((object[])((ExcelReference)courseworkGradesRange).GetValue()).Cast<object>();
-            var courseworkNames = ((object[])((ExcelReference)courseworkNameRange).GetValue()).Cast<string>();
-            string? tableWeightsName = ((ExcelReference)courseworkNameRange).GetValue() as string;
-
+            IEnumerable<object> courseworkGrades = ((object[,])((ExcelReference)courseworkGradesRange).GetValue()).Cast<object>();
+            IEnumerable<string> courseworkNames = ((object[,])((ExcelReference)courseworkNameRange).GetValue()).Cast<string>();
+            string tableWeightsName = ((ExcelReference)table).GetValue() as string;
+ 
             Dictionary<string, object> courseworkGradesZipped = courseworkNames.Zip(courseworkGrades, (key, value) => new { key, value }).ToDictionary(x => x.key, x => x.value);
 
             var app = Utils.GetExcelApplication().LoadWorkbookData().GradeSheets[Utils.GetCurrentSheetID()];
@@ -163,7 +187,7 @@ namespace AddinGrades
             return -1;
         }
 
-        [ExcelFunction(IsMacroType = false, IsVolatile = true)]
+        [ExcelCommand()]
         public static double CalculateFinalGrade(
              [ExcelArgument(AllowReference = true, Name = "knowledge")] object knowledge,
              [ExcelArgument(AllowReference = true, Name = "atitudes")] object atitude)
@@ -176,10 +200,10 @@ namespace AddinGrades
         }
 
         public static string cacheFeedbackSheetID;
-        [ExcelFunction(IsMacroType = false)]
+        [ExcelFunction( IsMacroType = true )]
         public static string GrabFeedbackFor([ExcelArgument(AllowReference = true, Name = "studentName")] object studentName)
-        { 
-            string studentNameString = (string)XlCall.Excel(XlCall.xlCoerce, studentName, (int)XlType12.XlTypeString);
+        {
+            string studentNameString = ((ExcelReference)studentName).GetValue() as string;
             string sheetName = ((string)XlCall.Excel(XlCall.xlSheetNm, studentName, (int)XlType12.XlTypeString)).Split(']')[1];
             cacheFeedbackSheetID ??= Utils.GetExcelApplication().LoadWorkbookData().FeedbackSheetID; 
 
@@ -198,11 +222,11 @@ namespace AddinGrades
             } 
         }
 
-        [ExcelFunction(IsMacroType = false)]
-        public static string GetSheetName([ExcelArgument(AllowReference = true, Name = "sheetID")] object sheetID)
+        [ExcelCommand()]
+        public static string GetSheetName([ExcelArgument( Name = "sheetID")] object sheetID)
         {
-            string sheetIDString = (string)XlCall.Excel(XlCall.xlCoerce, sheetID, (int)XlType12.XlTypeString);
-            if(sheetIDString is not null)
+            string? sheetIDString = sheetID as string;
+            if (string.IsNullOrEmpty(sheetIDString) == false)
             {
                 Worksheet sheet = Utils.GetWorksheetById(sheetIDString);
                 if(sheet is not null) return sheet.Name;
@@ -210,16 +234,16 @@ namespace AddinGrades
             return string.Empty;
         }
 
-        [ExcelFunction(IsMacroType = false, IsVolatile = true)]
+        [ExcelCommand()]
         public static string GetFinalGrade([ExcelArgument(AllowReference = true, Name = "sheetName")] object sheetName,
             [ExcelArgument(AllowReference = true, Name = "studentName")] object studentName)
         {
-            string studentNameString = (string)XlCall.Excel(XlCall.xlCoerce, studentName, (int)XlType12.XlTypeString);
-            string sheetNameString = (string)XlCall.Excel(XlCall.xlCoerce, sheetName, (int)XlType12.XlTypeString);
+            string studentNameString = ((ExcelReference)studentName).GetValue() as string;
+            string sheetNameString = ((ExcelReference)sheetName).GetValue() as string;
 
             foreach (Worksheet sheet in Utils.GetExcelApplication().Worksheets)
             {
-                if (sheet.Name.Equals(sheetNameString))
+                if (sheet.Name.Equals(sheetNameString) && string.IsNullOrEmpty(studentNameString) == false)
                 {
                     int? rowIndex = Utils.GetRowByNameIndex(sheet, studentNameString, "A");
                     if (rowIndex.HasValue)
@@ -273,7 +297,7 @@ namespace AddinGrades
         }
 
         public void InsertKnowledgeFunction(int row)
-        {
+        { 
             string knowledgeCollumnName = Utils.GetExcelColumnName(GetCollumnByNameIndex(CollumnName.Knowledge) + 1);
             string courseworkWeightedTableName = Utils.GetExcelColumnName(GetCollumnByNameIndex(CollumnName.CourseworkWeigthtedTable) + 1);
             string lastCourseworkCollumnName = Utils.GetExcelColumnName(GetCollumnByNameIndex(CollumnName.Knowledge));
@@ -422,9 +446,9 @@ namespace AddinGrades
         public void DeleteCourseworkCollumn(string name)
         {
             Worksheet worksheet = Utils.GetWorksheetById(GradeSheetID);
-            worksheet.Unprotect();
+            worksheet.Unprotect(); 
             string collumnLetter = Utils.GetExcelColumnName(GetCourseworkIndex(name) + 1);
-            worksheet.get_Range($"{collumnLetter}2").Delete();
+            worksheet.Columns[collumnLetter].Delete(); 
             worksheet.Protect();
         }
 
@@ -448,7 +472,7 @@ namespace AddinGrades
             Range currentCell = worksheet.get_Range("A2");
             int counter = 0;
 
-            while (currentCell.Value2 != courseworkName)
+            while (currentCell.Value2.ToString().Equals(courseworkName) is false)
             {
                 string c = currentCell.Value2;
                 currentCell = currentCell.Offset[0, 1];

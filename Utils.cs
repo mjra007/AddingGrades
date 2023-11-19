@@ -44,6 +44,7 @@ namespace AddinGrades
 
         public static WorkbookData LoadWorkbookData(this Microsoft.Office.Interop.Excel.Application application)
         {
+            if (application is null || application.ActiveWorkbook is null) return null;
             foreach (var item in application.ActiveWorkbook.CustomXMLParts.Cast<CustomXMLPart>())
             {
                     string xml = item.XML;

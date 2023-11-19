@@ -94,13 +94,14 @@ namespace AddinGrades
                 Program.LoggerPanel.WriteLineToPanel("This is not a gradesheet");
                 return;
             }
-            var sheet = Utils.GetWorksheetById(Utils.GetCurrentSheetID());
+            var sheet = Utils.GetWorksheetById(Utils.GetCurrentSheetID()); 
             if (sheet.ProtectContents)
             {
                 sheet.Unprotect();
             }
             else
             {
+                GradeTable.LockCollumnsAndHeaders(sheet);
                 sheet.Protect();
             }
         }
