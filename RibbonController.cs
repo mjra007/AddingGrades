@@ -25,11 +25,11 @@ namespace AddinGrades
           <tab id='tab1' label='Grades Plugin'>
             <group id='group1' label='GradeSheet Controls'>
               <button id='gradeSheetButton' imageMso='MicrosoftVisualFoxPro' label='Make this worksheet a gradesheet' onAction='OnGradeSheetCreatePressed' size='large'/>
-              <button id='addCoursework' imageMso='SourceControlAddObjects' label='Add/Remove coursework' onAction='OnAddCoursework' size='large'/>
               <button id='manageCourseworkWeights' imageMso='FunctionWizard' label='Manage Coursework Weights' onAction='OnManageCourseworkWeights' size='large'/>            
             </group >
-            <group id ='group2' label='Utilities'>
+            <group id ='group2' label='Gradesheet Utilities'>
               <button id='UnlockLock' imageMso='Lock'  label='Unlock or Lock sheet' onAction='UnlockSheet' size='large'/>  
+              <button id='SetStyleOfTable' imageMso='FieldShading'  label='Set  style of table' onAction='SetStyleOfTable' size='large'/>  
               <button id='CopyGradeString' imageMso='Copy' label='Copy grades csv string' onAction='OnCopyGradeString' size='large'/>
               <button id='CopyFeedbackString' imageMso='Copy' label='Copy feedback csv string' onAction='OnCopyFeedbackString' size='large'/>
             </group>
@@ -37,6 +37,24 @@ namespace AddinGrades
         </tabs>
       </ribbon>
     </customUI>";
+        }
+
+        public void SetStyleOfTable(IRibbonControl control)
+        {
+            Application app = Utils.GetExcelApplication();
+            if (Utils.IsEditing(app))
+                return;
+            if (Utils.GetCurrentSheetID() is null)
+            {
+                Program.LoggerPanel.WriteLineToPanel("This is not a gradesheet");
+                return;
+            }
+            if (Utils.IsFeedback())
+            {
+                Program.LoggerPanel.WriteLineToPanel("This is not a gradesheet");
+                return;
+            }
+            GradeTable.ApplyStyles(app.ActiveWorkbook.ActiveSheet);
         }
 
         public void OnCopyGradeString(IRibbonControl control)
@@ -121,24 +139,6 @@ namespace AddinGrades
                 return;
             }
             ManageCourseworkWeight form = new(Utils.GetCurrentSheetID());
-            form.Show();
-        }
-
-        public void OnAddCoursework(IRibbonControl control)
-        {
-            if (Utils.IsEditing(Utils.GetExcelApplication()))
-                return;
-            if (Utils.GetCurrentSheetID() is null)
-            {
-                Program.LoggerPanel.WriteLineToPanel("This is not a gradesheet");
-                return;
-            }
-            if (Utils.IsFeedback())
-            {
-                Program.LoggerPanel.WriteLineToPanel("This is not a gradesheet");
-                return;
-            }
-            AddCoursework form = new(Utils.GetCurrentSheetID());
             form.Show();
         }
 

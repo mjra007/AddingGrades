@@ -30,8 +30,8 @@
         {
             components = new System.ComponentModel.Container();
             groupBox1 = new GroupBox();
-            groupBox2 = new GroupBox();
             saveWeightChangesButton = new Button();
+            groupBox2 = new GroupBox();
             flowLayoutPanel1 = new FlowLayoutPanel();
             tablesGroup = new GroupBox();
             tablesList = new CheckedListBox();
@@ -47,45 +47,45 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(saveWeightChangesButton);
             groupBox1.Controls.Add(groupBox2);
             groupBox1.Controls.Add(tablesGroup);
             groupBox1.Controls.Add(tableGroup);
             groupBox1.Location = new Point(12, 12);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(669, 484);
+            groupBox1.Size = new Size(666, 484);
             groupBox1.TabIndex = 1;
             groupBox1.TabStop = false;
             groupBox1.Text = "Menu";
             // 
-            // groupBox2
-            // 
-            groupBox2.Controls.Add(saveWeightChangesButton);
-            groupBox2.Controls.Add(flowLayoutPanel1);
-            groupBox2.Location = new Point(286, 22);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(377, 451);
-            groupBox2.TabIndex = 2;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "Weights";
-            // 
             // saveWeightChangesButton
             // 
-            saveWeightChangesButton.Location = new Point(6, 422);
+            saveWeightChangesButton.Location = new Point(289, 446);
             saveWeightChangesButton.Name = "saveWeightChangesButton";
-            saveWeightChangesButton.Size = new Size(365, 23);
+            saveWeightChangesButton.Size = new Size(372, 23);
             saveWeightChangesButton.TabIndex = 1;
             saveWeightChangesButton.Text = " Save Weight Changes";
             saveWeightChangesButton.UseVisualStyleBackColor = true;
             saveWeightChangesButton.Click += saveWeightChangesButton_Click;
             // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(flowLayoutPanel1);
+            groupBox2.Location = new Point(286, 22);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(375, 421);
+            groupBox2.TabIndex = 2;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Weights";
+            // 
             // flowLayoutPanel1
             // 
-            flowLayoutPanel1.Anchor = AnchorStyles.None;
             flowLayoutPanel1.AutoScroll = true;
+            flowLayoutPanel1.Dock = DockStyle.Fill;
             flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel1.Location = new Point(3, 19);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(371, 397);
+            flowLayoutPanel1.Size = new Size(369, 399);
             flowLayoutPanel1.TabIndex = 0;
             flowLayoutPanel1.WrapContents = false;
             // 
@@ -140,17 +140,15 @@
             // timer1
             // 
             timer1.Enabled = true;
-            timer1.Interval = 2000;
+            timer1.Interval = 1500;
             timer1.Tick += OnTimerTick;
             // 
             // ManageCourseworkWeight
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(684, 497);
+            ClientSize = new Size(688, 506);
             Controls.Add(groupBox1);
-            MaximumSize = new Size(700, 536);
-            MinimumSize = new Size(700, 536);
             Name = "ManageCourseworkWeight";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "ManageCourseworkWeight";

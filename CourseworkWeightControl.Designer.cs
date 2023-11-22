@@ -51,7 +51,7 @@
             groupBox1.Controls.Add(groupBox2);
             groupBox1.Location = new Point(3, 3);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(330, 83);
+            groupBox1.Size = new Size(331, 83);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "Weight";
@@ -64,7 +64,7 @@
             deleteCourseworkBtn.FlatAppearance.BorderSize = 0;
             deleteCourseworkBtn.FlatStyle = FlatStyle.Flat;
             deleteCourseworkBtn.ForeColor = Color.Transparent;
-            deleteCourseworkBtn.Location = new Point(313, 0);
+            deleteCourseworkBtn.Location = new Point(314, 0);
             deleteCourseworkBtn.Name = "deleteCourseworkBtn";
             deleteCourseworkBtn.Size = new Size(17, 18);
             deleteCourseworkBtn.TabIndex = 2;
@@ -74,9 +74,9 @@
             // groupBox3
             // 
             groupBox3.Controls.Add(courseworkWeight);
-            groupBox3.Location = new Point(201, 22);
+            groupBox3.Location = new Point(245, 22);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(123, 55);
+            groupBox3.Size = new Size(80, 55);
             groupBox3.TabIndex = 1;
             groupBox3.TabStop = false;
             groupBox3.Text = "Weight %";
@@ -85,7 +85,7 @@
             // 
             courseworkWeight.Location = new Point(6, 22);
             courseworkWeight.Name = "courseworkWeight";
-            courseworkWeight.Size = new Size(111, 23);
+            courseworkWeight.Size = new Size(68, 23);
             courseworkWeight.TabIndex = 0;
             // 
             // groupBox2
@@ -93,7 +93,7 @@
             groupBox2.Controls.Add(courseworkName);
             groupBox2.Location = new Point(6, 22);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(189, 56);
+            groupBox2.Size = new Size(233, 56);
             groupBox2.TabIndex = 0;
             groupBox2.TabStop = false;
             groupBox2.Text = "Coursework Name";
@@ -158,7 +158,7 @@
             Controls.Add(groupBox1);
             Controls.Add(deleteGroup);
             Name = "CourseworkWeightControl";
-            Size = new Size(337, 91);
+            Size = new Size(338, 91);
             groupBox1.ResumeLayout(false);
             groupBox3.ResumeLayout(false);
             groupBox3.PerformLayout();

@@ -56,7 +56,26 @@ namespace AddinGrades
                         $"=GetFinalGrade({Utils.GetExcelColumnName(currentCell.Column)}{currentCell.Row},A{cellIteratorForFinalGrade.Row})";
                 }
             }
-
         }
+
+        //public static void LockCollumnsAndHeaders(Worksheet worksheet)
+        //{
+        //    string lastColumn = Utils.GetExcelColumnName(columnNumber: DefaultColumns.Count);
+        //    string feedbackColumnName = Utils.GetExcelColumnName(columnNumber: Utils.GetCollumnByNameIndex(worksheet, CollumnName.Feedback) + 1);
+        //    string knowledgeCollumnName = Utils.GetExcelColumnName(columnNumber: Utils.GetCollumnByNameIndex(worksheet, CollumnName.Knowledge) + 1);
+        //    string finalCollumnName = Utils.GetExcelColumnName(columnNumber: Utils.GetCollumnByNameIndex(worksheet, CollumnName.FinalGrade) + 1);
+
+        //    using (Unprotecter unprotecter = new(worksheet))
+        //    {
+        //        //Unlock all the cells
+        //        worksheet.get_Range("A1", $"{lastColumn}100").Locked = false;
+        //        //Lock headers first
+        //        worksheet.get_Range("A2", $"{lastColumn}2").Locked = true;
+        //        worksheet.get_Range($"{feedbackColumnName}3", $"{feedbackColumnName}100").Locked = true;
+        //        worksheet.get_Range($"{knowledgeCollumnName}3", $"{knowledgeCollumnName}100").Locked = true;
+        //        worksheet.get_Range($"{finalCollumnName}3", $"{finalCollumnName}100").Locked = true; 
+        //    }
+        //}
+
     }
 }

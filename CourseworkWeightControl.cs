@@ -52,7 +52,7 @@ namespace AddinGrades
             deleteGroup.Visible = false;
             deleteGroup.Enabled = false;
         }
-
+         
 
     }
 }

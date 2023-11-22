@@ -1,14 +1,4 @@
 ﻿using AddinGrades.DTO;
-using Microsoft.VisualStudio.Services.Common;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace AddinGrades
 {
@@ -40,7 +30,7 @@ namespace AddinGrades
                 this.tablesList.Items.Add(newTableName.Text);
                 GradeTable table = new GradeTable(GradeSheetID);
                 table.InsertDropdownForWeightedTable();
-                table.InsertKnowledgeFunctionForRows();
+                table.InsertKnowledgeFunctionForRows(Utils.GetWorksheetById(GradeSheetID));
             }
         }
 
@@ -64,18 +54,20 @@ namespace AddinGrades
 
         public void OnCourseworkAdd(object? sender, (string, double) pair)
         {
-
             WorkbookData data = Utils.GetExcelApplication().LoadWorkbookData();
             Coursework newCoursework;
             data.GradeSheets[GradeSheetID].Coursework.Add(newCoursework = new Coursework(pair.Item1));
-            data.GradeSheets[GradeSheetID].CourseworkWeightedTables.ForEach(s => s.AddCoursework(newCoursework, pair.Item2 /100));
+            data.GradeSheets[GradeSheetID].CourseworkWeightedTables.ForEach(s => s.AddCoursework(newCoursework, pair.Item2 / 100));
             data.Save();
             GradeTable table = new(GradeSheetID);
             table.InsertNewCoursework(newCoursework);
             table.InsertDropdownForWeightedTable();
-            table.InsertKnowledgeFunctionForRows();
+            table.InsertKnowledgeFunctionForRows(Utils.GetWorksheetById(GradeSheetID));
             table.LockCollumnsAndHeaders();
             RefreshListOfCoursework();
+            table.ApplyStyles(); 
+            //For some reason chrome driver makes it so you have to bind this event again 
+            Utils.GetExcelApplication().ActiveWorkbook.SheetChange += Program.OnSheetChange;
         }
 
         public void OnCourseworkDelete(object? sender, string courseworkName)
@@ -91,8 +83,11 @@ namespace AddinGrades
             flowLayoutPanel1.Controls.Remove(sender as Control);
             GradeTable table = new(GradeSheetID);
             table.InsertDropdownForWeightedTable();
-            table.InsertKnowledgeFunctionForRows();
+            table.InsertKnowledgeFunctionForRows(Utils.GetWorksheetById(GradeSheetID));
             table.LockCollumnsAndHeaders();
+            table.ApplyStyles();
+            //For some reason chrome driver makes it so you have to bind this event again 
+            Utils.GetExcelApplication().ActiveWorkbook.SheetChange += Program.OnSheetChange;
         }
 
         private void tablesGroup_Enter(object sender, EventArgs e)
@@ -103,18 +98,51 @@ namespace AddinGrades
         private void saveWeightChangesButton_Click(object sender, EventArgs e)
         {
             WorkbookData data = Utils.GetExcelApplication().LoadWorkbookData();
+
+            double totalWeigths = 0d;
             foreach (Control item in flowLayoutPanel1.Controls)
             {
                 if (item is CourseworkWeightControl courseworkWeight)
                 {
-                    data.GradeSheets[GradeSheetID].GetWeightedTable((string)tablesList.SelectedItem).Object
-                    .ChangeWeight(data.GradeSheets[GradeSheetID].GetCoursework(courseworkWeight.GetCourseworkName()).Object,
-                    double.Parse(courseworkWeight.GetWeight()) / 100);
+                    if (double.TryParse(courseworkWeight.GetWeight(), out double parsedWeight))
+                    {
+                        totalWeigths += parsedWeight;
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Please reconsider the weight for: {courseworkWeight.GetCourseworkName()}");
+                        return;
+                    }
+                }
+            }
+
+            if (totalWeigths != 85)
+            {
+                MessageBox.Show($"The total weight percentage should be 85%");
+                return;
+            }
+
+
+            foreach (Control item in flowLayoutPanel1.Controls)
+            {
+                if (item is CourseworkWeightControl courseworkWeight)
+                {
+                    if (double.TryParse(courseworkWeight.GetWeight(), out double parsedWeight))
+                    {
+                        data.GradeSheets[GradeSheetID].GetWeightedTable((string)tablesList.SelectedItem).Object
+                        .ChangeWeight(data.GradeSheets[GradeSheetID].GetCoursework(courseworkWeight.GetCourseworkName()).Object,
+                        parsedWeight / 100);
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Please reconsider the weight for: {courseworkWeight.GetCourseworkName()}");
+                        return;
+                    }
                 }
             }
             data.Save();
             GradeTable table = new(GradeSheetID);
-            table.InsertKnowledgeFunctionForRows();
+            table.InsertKnowledgeFunctionForRows(Utils.GetWorksheetById(GradeSheetID));
         }
 
         private void OnTimerTick(object sender, EventArgs e)
@@ -129,8 +157,7 @@ namespace AddinGrades
                 }
 
             }
-
-            groupBox2.Text = $"Total weights: {total}/100";
+            groupBox2.Text = $"Total: {total}/85  Unassigned: {85 - total}";
         }
 
     }

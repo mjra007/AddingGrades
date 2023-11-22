@@ -1,6 +1,7 @@
-﻿using ExcelDna.Integration;
+﻿using AddinGrades.DTO;
+using ExcelDna.Integration;
 using ExcelDna.Integration.CustomUI;
-using Microsoft.Office.Interop.Excel; 
+using Microsoft.Office.Interop.Excel;
 using Range = Microsoft.Office.Interop.Excel.Range;
 
 namespace AddinGrades
@@ -9,6 +10,7 @@ namespace AddinGrades
     {
         public static LoggerPanel? LoggerPanel;
         public static bool CreationOfGradeSheetInProgress = false;
+        public static string Version = "v1.1";
 
         static void Main(string[] args)
         {
@@ -23,7 +25,8 @@ namespace AddinGrades
             var ctp = CustomTaskPaneFactory.CreateCustomTaskPane(LoggerPanel, "Grades addin console");
             ctp.Visible = true;
             ctp.DockPosition = MsoCTPDockPosition.msoCTPDockPositionTop;
-            ctp.Height = 80; 
+            ctp.Height = 80;
+            Utils.GetExcelApplication().WorkbookOpen += OpenWorkbook;
             Utils.GetExcelApplication().WorkbookActivate += OpenWorkbook;
             Utils.GetExcelApplication().WorkbookBeforeClose += BeforeCloseWorkbook;
         }
@@ -35,14 +38,18 @@ namespace AddinGrades
 
         private void OpenWorkbook(Workbook Wb)
         {
-
+            WorkbookData data = Utils.LoadWorkbookData(Utils.GetExcelApplication());
+            if (data is not null)
+            {
+                Patcher.UpdateWorkbook(data.Version);
+            }
             Utils.GetExcelApplication().ActiveWorkbook.SheetChange += OnSheetChange;
         }
 
         public static void OnSheetChange(object Sh, Range Target)
         { 
             if (Utils.IsFeedback() is false && Utils.GetCurrentSheetID() != null && CreationOfGradeSheetInProgress is false &&
-                Target.Column == 1)//This is a change in the alunos column
+                Target.Column == 1 && Target.Row == 1)//This is a change in the alunos column
             {
                 InsertStudentGradeFormulas(Target);
             }

@@ -5,18 +5,11 @@ using Microsoft.Office.Interop.Excel;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium;
-using SeleniumExtras.WaitHelpers;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Security;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using Application = Microsoft.Office.Interop.Excel.Application;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView; 
+using SeleniumExtras.WaitHelpers; 
+using System.Collections.ObjectModel; 
+using Application = Microsoft.Office.Interop.Excel.Application; 
 using Range = Microsoft.Office.Interop.Excel.Range;
+using System.Linq;
 
 namespace AddinGrades
 {
@@ -58,7 +51,7 @@ namespace AddinGrades
 
         public static Application GetExcelApplication()
         {
-            return ExcelDnaUtil.Application as Microsoft.Office.Interop.Excel.Application;
+            return ExcelDnaUtil.Application as Application;
         }
 
         public static string? GetCurrentSheetID()
@@ -70,6 +63,17 @@ namespace AddinGrades
             }
             return null; 
         } 
+          
+        public static Worksheet? GetSheetByExcelReference(ExcelReference reference)
+        {
+            string sheetName = (string)XlCall.Excel(XlCall.xlSheetNm, reference);
+            sheetName = sheetName.Split("]")[1];
+            foreach (Worksheet sheet in Utils.GetExcelApplication().Worksheets)
+            {
+                if (sheet.Name.Equals(sheetName)) return sheet;
+            }
+            return null;
+        }
 
         public static WorkbookData IfNullCreate(this WorkbookData data)
         {
@@ -82,11 +86,12 @@ namespace AddinGrades
             return data;
         }
 
-        public static void CreateWorkbookData(this Microsoft.Office.Interop.Excel.Application application)
+        public static void CreateWorkbookData(this Application application)
         {
             application.ActiveWorkbook.CustomXMLParts.Add(WorkbookData.Serialize(new WorkbookData()));
         }
 
+     
         public static string CreateCustomID(this Worksheet worksheet, bool feedbackSheet = false)
         {
             string gradeSheetID;
@@ -109,7 +114,7 @@ namespace AddinGrades
         public static bool IsFeedback(this Worksheet sheet)
         { 
             if (sheet.CustomProperties.Cast<CustomProperty>().Any(c => c.Name == "FeedbackSheet"))
-            {
+            { 
                 return bool.Parse(sheet.GetProperty("FeedbackSheet"));
             }
             return false;
@@ -128,8 +133,11 @@ namespace AddinGrades
         {
             Application app = ExcelDnaUtil.Application as Application;
             foreach (Worksheet worksheet in app.Sheets)
-            {
-                return worksheet.IsFeedback() ? worksheet : null;
+            { 
+                if (worksheet.IsFeedback())
+                {
+                    return worksheet;
+                } 
             }
             return null;
         }
@@ -147,7 +155,7 @@ namespace AddinGrades
             Application app = GetExcelApplication();
             foreach (Worksheet sheet in app.Worksheets)
             { 
-                if (sheet.GetCustomID().Equals(gradeID)) return sheet;
+                if (sheet is not null && sheet.GetCustomID() is not null && sheet.GetCustomID().Equals(gradeID)) return sheet;
             }
             return null;
         } 
@@ -186,6 +194,8 @@ namespace AddinGrades
             return false;
         }
 
+        static List<string> FilteredTags = new() { "Abandonou", "Desistiu", "Anulou Matrícula", "Excluído por Faltas", "Exclusão por motivos disciplinares",
+        "Transferido de Escola", "Transferido de Turma", "Transferido de Curso"};
         public static List<string> GetListOfStudents(ChromeDriver driver, string className)
         {
             List<string> studentNames = new();
@@ -197,7 +207,10 @@ namespace AddinGrades
                 var windowClasss = driver.WindowHandles.Last();
                 driver.SwitchTo().Window(windowClasss); 
                 driver.FindElement(By.Id("__tab_ctl00_editContentPlaceHolder_Tabs_tp3")).Click();
-                studentNames.AddRange( driver.FindElements(By.CssSelector("div[class='divImgStudent']")).Select(s => s.FindElement(By.TagName("a")).GetAttribute("title")).ToList()); 
+                var studentsFiltered = driver.FindElements(By.CssSelector("div[class='divImgStudent']")).Select(s => s.FindElements(By.TagName("a")))
+                    .Where(s => s.Where(d => FilteredTags.Contains(d.GetAttribute("title"))).All(s => s.GetAttribute("style").Equals("display: none;") is true))
+                    .Select(s=>s.First(d=>d.GetAttribute("id").Equals("studentImage")).GetAttribute("title")).ToList();
+                studentNames.AddRange(studentsFiltered); 
                 driver.Close();
                 driver.SwitchTo().Window(firstWindow);
                 driver.Close(); 
@@ -229,7 +242,10 @@ namespace AddinGrades
                 yield return searchContext.FindElements(By.TagName("td"))[2].Text; 
         }
 
-        public static int GetCollumnByNameIndex(string sheetID, string courseworkName, string firstCell = "A2")
+
+
+
+        public static int? GetCollumnByNameIndex(string sheetID, string courseworkName, string firstCell = "A2")
         {
             Worksheet worksheet = Utils.GetWorksheetById(sheetID);
             Range currentCell = worksheet.get_Range(firstCell);
@@ -239,6 +255,10 @@ namespace AddinGrades
             {
                 string c = currentCell.Value2;
                 currentCell = currentCell.Offset[0, 1];
+                if (counter == 100)
+                {
+                    return null;
+                }
                 counter++;
             };
             return counter;

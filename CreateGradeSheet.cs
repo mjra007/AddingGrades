@@ -33,14 +33,15 @@ namespace AddinGrades
             Program.CreationOfGradeSheetInProgress = true;
             WorkbookData data = app.LoadWorkbookData().IfNullCreate();
             IEnumerable<string> studentNames = new List<string>();
+            Worksheet worksheet = app.ActiveWorkbook.ActiveSheet;
             if (string.IsNullOrEmpty(numberOfSheetsComboBox.SelectedItem.ToString()) is false)
             {
                 int numberOfSheets = int.Parse(numberOfSheetsComboBox.SelectedItem.ToString());
                 for (int i = 0; i < numberOfSheets; i++)
                 {
                     //Add custom ID to gradeSheet if not created already
-                    Worksheet worksheet = app.ActiveWorkbook.Worksheets.Add();
-                    worksheet.Name = $"{DefaultGradeSheetName} {numberOfSheets - i}";
+                    worksheet = app.ActiveWorkbook.Worksheets.Add(After: worksheet); 
+                    worksheet.Name = $"{DefaultGradeSheetName} {i+1}";
                     string gradeSheetID = worksheet.GetCustomID();
                     gradeSheetID ??= worksheet.CreateCustomID();
                     //create gradesheet in workbookdata
