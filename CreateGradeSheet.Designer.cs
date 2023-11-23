@@ -28,193 +28,286 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupClassPicker = new System.Windows.Forms.GroupBox();
-            this.classesDropDown = new System.Windows.Forms.ComboBox();
-            this.classesLbl = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.loginButton = new System.Windows.Forms.Button();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.passwordTxt = new System.Windows.Forms.TextBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.emailTxt = new System.Windows.Forms.TextBox();
-            this.createGradeSheetButton = new System.Windows.Forms.Button();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.numberOfSheetsComboBox = new System.Windows.Forms.ComboBox();
-            this.groupBox1.SuspendLayout();
-            this.groupClassPicker.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.groupBox4.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            this.groupBox5.SuspendLayout();
-            this.SuspendLayout();
+            groupBox1 = new GroupBox();
+            groupBox7 = new GroupBox();
+            cacheData = new Label();
+            button1 = new Button();
+            label1 = new Label();
+            groupClassPicker = new GroupBox();
+            groupBox5 = new GroupBox();
+            numberOfSheetsComboBox = new ComboBox();
+            classesDropDown = new ComboBox();
+            createGradeSheetButton = new Button();
+            classesLbl = new Label();
+            groupBox6 = new GroupBox();
+            returnButton = new Button();
+            groupBox2 = new GroupBox();
+            progressBar1 = new ProgressBar();
+            loginButton = new Button();
+            groupBox4 = new GroupBox();
+            passwordTxt = new TextBox();
+            groupBox3 = new GroupBox();
+            emailTxt = new TextBox();
+            groupBox1.SuspendLayout();
+            groupBox7.SuspendLayout();
+            groupClassPicker.SuspendLayout();
+            groupBox5.SuspendLayout();
+            groupBox6.SuspendLayout();
+            groupBox2.SuspendLayout();
+            groupBox4.SuspendLayout();
+            groupBox3.SuspendLayout();
+            SuspendLayout();
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.groupClassPicker);
-            this.groupBox1.Controls.Add(this.groupBox2);
-            this.groupBox1.Location = new System.Drawing.Point(12, 12);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(385, 224);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Class details";
+            groupBox1.Controls.Add(groupBox7);
+            groupBox1.Controls.Add(groupClassPicker);
+            groupBox1.Location = new Point(12, 12);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(385, 269);
+            groupBox1.TabIndex = 0;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Class details";
+            // 
+            // groupBox7
+            // 
+            groupBox7.Controls.Add(cacheData);
+            groupBox7.Controls.Add(button1);
+            groupBox7.Controls.Add(label1);
+            groupBox7.Location = new Point(9, 163);
+            groupBox7.Name = "groupBox7";
+            groupBox7.Size = new Size(364, 100);
+            groupBox7.TabIndex = 6;
+            groupBox7.TabStop = false;
+            groupBox7.Text = "Cache settings";
+            // 
+            // cacheData
+            // 
+            cacheData.AutoSize = true;
+            cacheData.Location = new Point(12, 48);
+            cacheData.Name = "cacheData";
+            cacheData.Size = new Size(0, 15);
+            cacheData.TabIndex = 2;
+            // 
+            // button1
+            // 
+            button1.Location = new Point(223, 19);
+            button1.Name = "button1";
+            button1.Size = new Size(129, 72);
+            button1.TabIndex = 1;
+            button1.Text = "Update cache";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(12, 28);
+            label1.Name = "label1";
+            label1.Size = new Size(78, 15);
+            label1.TabIndex = 0;
+            label1.Text = "Last updated:";
             // 
             // groupClassPicker
             // 
-            this.groupClassPicker.Controls.Add(this.classesDropDown);
-            this.groupClassPicker.Controls.Add(this.classesLbl);
-            this.groupClassPicker.Enabled = false;
-            this.groupClassPicker.Location = new System.Drawing.Point(6, 134);
-            this.groupClassPicker.Name = "groupClassPicker";
-            this.groupClassPicker.Size = new System.Drawing.Size(367, 82);
-            this.groupClassPicker.TabIndex = 5;
-            this.groupClassPicker.TabStop = false;
-            this.groupClassPicker.Text = "Get names of students (LOGIN REQUIRED)";
-            // 
-            // classesDropDown
-            // 
-            this.classesDropDown.FormattingEnabled = true;
-            this.classesDropDown.Location = new System.Drawing.Point(12, 43);
-            this.classesDropDown.Name = "classesDropDown";
-            this.classesDropDown.Size = new System.Drawing.Size(340, 23);
-            this.classesDropDown.TabIndex = 0;
-            // 
-            // classesLbl
-            // 
-            this.classesLbl.AutoSize = true;
-            this.classesLbl.Location = new System.Drawing.Point(12, 25);
-            this.classesLbl.Name = "classesLbl";
-            this.classesLbl.Size = new System.Drawing.Size(69, 15);
-            this.classesLbl.TabIndex = 2;
-            this.classesLbl.Text = "Select class:";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.loginButton);
-            this.groupBox2.Controls.Add(this.groupBox4);
-            this.groupBox2.Controls.Add(this.groupBox3);
-            this.groupBox2.Location = new System.Drawing.Point(6, 22);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(367, 106);
-            this.groupBox2.TabIndex = 1;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Login for es.jobra.pt";
-            // 
-            // loginButton
-            // 
-            this.loginButton.Location = new System.Drawing.Point(143, 78);
-            this.loginButton.Name = "loginButton";
-            this.loginButton.Size = new System.Drawing.Size(75, 23);
-            this.loginButton.TabIndex = 2;
-            this.loginButton.Text = "Login";
-            this.loginButton.UseVisualStyleBackColor = true;
-            this.loginButton.Click += new System.EventHandler(this.loginButton_Click);
-            // 
-            // groupBox4
-            // 
-            this.groupBox4.Controls.Add(this.passwordTxt);
-            this.groupBox4.Location = new System.Drawing.Point(185, 22);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(173, 50);
-            this.groupBox4.TabIndex = 1;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Password";
-            // 
-            // passwordTxt
-            // 
-            this.passwordTxt.Location = new System.Drawing.Point(6, 21);
-            this.passwordTxt.Name = "passwordTxt";
-            this.passwordTxt.PasswordChar = '*';
-            this.passwordTxt.Size = new System.Drawing.Size(161, 23);
-            this.passwordTxt.TabIndex = 1;
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.emailTxt);
-            this.groupBox3.Location = new System.Drawing.Point(6, 22);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(173, 50);
-            this.groupBox3.TabIndex = 0;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Email";
-            // 
-            // emailTxt
-            // 
-            this.emailTxt.Location = new System.Drawing.Point(6, 21);
-            this.emailTxt.Name = "emailTxt";
-            this.emailTxt.Size = new System.Drawing.Size(161, 23);
-            this.emailTxt.TabIndex = 0;
-            this.emailTxt.Text = "nunopinho1@gmail.com";
-            // 
-            // createGradeSheetButton
-            // 
-            this.createGradeSheetButton.Location = new System.Drawing.Point(12, 242);
-            this.createGradeSheetButton.Name = "createGradeSheetButton";
-            this.createGradeSheetButton.Size = new System.Drawing.Size(238, 39);
-            this.createGradeSheetButton.TabIndex = 1;
-            this.createGradeSheetButton.Text = "Create gradesheet";
-            this.createGradeSheetButton.UseVisualStyleBackColor = true;
-            this.createGradeSheetButton.Click += new System.EventHandler(this.createGradeSheetButton_Click);
+            groupClassPicker.Controls.Add(groupBox5);
+            groupClassPicker.Controls.Add(classesDropDown);
+            groupClassPicker.Controls.Add(createGradeSheetButton);
+            groupClassPicker.Controls.Add(classesLbl);
+            groupClassPicker.Enabled = false;
+            groupClassPicker.Location = new Point(9, 22);
+            groupClassPicker.Name = "groupClassPicker";
+            groupClassPicker.Size = new Size(367, 135);
+            groupClassPicker.TabIndex = 5;
+            groupClassPicker.TabStop = false;
+            groupClassPicker.Text = "Get names of students";
             // 
             // groupBox5
             // 
-            this.groupBox5.Controls.Add(this.numberOfSheetsComboBox);
-            this.groupBox5.Location = new System.Drawing.Point(256, 242);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(141, 42);
-            this.groupBox5.TabIndex = 2;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Number of sheets";
+            groupBox5.Controls.Add(numberOfSheetsComboBox);
+            groupBox5.Location = new Point(212, 72);
+            groupBox5.Name = "groupBox5";
+            groupBox5.Size = new Size(149, 47);
+            groupBox5.TabIndex = 2;
+            groupBox5.TabStop = false;
+            groupBox5.Text = "Number of sheets";
             // 
             // numberOfSheetsComboBox
             // 
-            this.numberOfSheetsComboBox.FormattingEnabled = true;
-            this.numberOfSheetsComboBox.Location = new System.Drawing.Point(8, 16);
-            this.numberOfSheetsComboBox.Name = "numberOfSheetsComboBox";
-            this.numberOfSheetsComboBox.Size = new System.Drawing.Size(121, 23);
-            this.numberOfSheetsComboBox.TabIndex = 0;
-            this.numberOfSheetsComboBox.Text = "3";
+            numberOfSheetsComboBox.FormattingEnabled = true;
+            numberOfSheetsComboBox.Location = new Point(8, 16);
+            numberOfSheetsComboBox.Name = "numberOfSheetsComboBox";
+            numberOfSheetsComboBox.Size = new Size(129, 23);
+            numberOfSheetsComboBox.TabIndex = 0;
+            numberOfSheetsComboBox.Text = "3";
+            // 
+            // classesDropDown
+            // 
+            classesDropDown.FormattingEnabled = true;
+            classesDropDown.ImeMode = ImeMode.NoControl;
+            classesDropDown.Location = new Point(12, 43);
+            classesDropDown.Name = "classesDropDown";
+            classesDropDown.Size = new Size(340, 23);
+            classesDropDown.TabIndex = 0;
+            // 
+            // createGradeSheetButton
+            // 
+            createGradeSheetButton.Location = new Point(12, 72);
+            createGradeSheetButton.Name = "createGradeSheetButton";
+            createGradeSheetButton.Size = new Size(194, 47);
+            createGradeSheetButton.TabIndex = 1;
+            createGradeSheetButton.Text = "Create gradesheet";
+            createGradeSheetButton.UseVisualStyleBackColor = true;
+            createGradeSheetButton.Click += createGradeSheetButton_Click;
+            // 
+            // classesLbl
+            // 
+            classesLbl.AutoSize = true;
+            classesLbl.Location = new Point(12, 25);
+            classesLbl.Name = "classesLbl";
+            classesLbl.Size = new Size(69, 15);
+            classesLbl.TabIndex = 2;
+            classesLbl.Text = "Select class:";
+            // 
+            // groupBox6
+            // 
+            groupBox6.Controls.Add(returnButton);
+            groupBox6.Controls.Add(groupBox2);
+            groupBox6.Location = new Point(12, 12);
+            groupBox6.Name = "groupBox6";
+            groupBox6.Size = new Size(385, 269);
+            groupBox6.TabIndex = 3;
+            groupBox6.TabStop = false;
+            groupBox6.Text = "Cache";
+            // 
+            // returnButton
+            // 
+            returnButton.BackColor = Color.Transparent;
+            returnButton.BackgroundImage = Properties.Resources.previous;
+            returnButton.BackgroundImageLayout = ImageLayout.Stretch;
+            returnButton.FlatAppearance.BorderSize = 0;
+            returnButton.FlatStyle = FlatStyle.Flat;
+            returnButton.Location = new Point(347, 0);
+            returnButton.Name = "returnButton";
+            returnButton.Size = new Size(32, 32);
+            returnButton.TabIndex = 3;
+            returnButton.Text = " ";
+            returnButton.UseVisualStyleBackColor = false;
+            returnButton.Click += returnButton_Click;
+            // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(progressBar1);
+            groupBox2.Controls.Add(loginButton);
+            groupBox2.Controls.Add(groupBox4);
+            groupBox2.Controls.Add(groupBox3);
+            groupBox2.Location = new Point(6, 22);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(367, 241);
+            groupBox2.TabIndex = 2;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Login for es.jobra.pt";
+            // 
+            // progressBar1
+            // 
+            progressBar1.Location = new Point(6, 196);
+            progressBar1.Name = "progressBar1";
+            progressBar1.Size = new Size(355, 36);
+            progressBar1.TabIndex = 3;
+            // 
+            // loginButton
+            // 
+            loginButton.Location = new Point(6, 84);
+            loginButton.Name = "loginButton";
+            loginButton.Size = new Size(355, 102);
+            loginButton.TabIndex = 2;
+            loginButton.Text = "Cache";
+            loginButton.UseVisualStyleBackColor = true;
+            loginButton.Click += loginButton_Click_1;
+            // 
+            // groupBox4
+            // 
+            groupBox4.Controls.Add(passwordTxt);
+            groupBox4.Location = new Point(185, 22);
+            groupBox4.Name = "groupBox4";
+            groupBox4.Size = new Size(173, 50);
+            groupBox4.TabIndex = 1;
+            groupBox4.TabStop = false;
+            groupBox4.Text = "Password";
+            // 
+            // passwordTxt
+            // 
+            passwordTxt.Location = new Point(6, 21);
+            passwordTxt.Name = "passwordTxt";
+            passwordTxt.PasswordChar = '*';
+            passwordTxt.Size = new Size(161, 23);
+            passwordTxt.TabIndex = 1;
+            // 
+            // groupBox3
+            // 
+            groupBox3.Controls.Add(emailTxt);
+            groupBox3.Location = new Point(6, 22);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Size = new Size(173, 50);
+            groupBox3.TabIndex = 0;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "Email";
+            // 
+            // emailTxt
+            // 
+            emailTxt.Location = new Point(6, 21);
+            emailTxt.Name = "emailTxt";
+            emailTxt.Size = new Size(161, 23);
+            emailTxt.TabIndex = 0;
+            emailTxt.Text = "nunopinho1@gmail.com";
             // 
             // CreateGradeSheet
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(409, 289);
-            this.Controls.Add(this.groupBox5);
-            this.Controls.Add(this.createGradeSheetButton);
-            this.Controls.Add(this.groupBox1);
-            this.MaximumSize = new System.Drawing.Size(425, 328);
-            this.MinimumSize = new System.Drawing.Size(425, 328);
-            this.Name = "CreateGradeSheet";
-            this.Text = "Grasheet Maker";
-            this.groupBox1.ResumeLayout(false);
-            this.groupClassPicker.ResumeLayout(false);
-            this.groupClassPicker.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            this.groupBox5.ResumeLayout(false);
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(409, 289);
+            Controls.Add(groupBox1);
+            Controls.Add(groupBox6);
+            MaximumSize = new Size(425, 328);
+            MinimumSize = new Size(425, 328);
+            Name = "CreateGradeSheet";
+            Text = "Grasheet Maker";
+            groupBox1.ResumeLayout(false);
+            groupBox7.ResumeLayout(false);
+            groupBox7.PerformLayout();
+            groupClassPicker.ResumeLayout(false);
+            groupClassPicker.PerformLayout();
+            groupBox5.ResumeLayout(false);
+            groupBox6.ResumeLayout(false);
+            groupBox2.ResumeLayout(false);
+            groupBox4.ResumeLayout(false);
+            groupBox4.PerformLayout();
+            groupBox3.ResumeLayout(false);
+            groupBox3.PerformLayout();
+            ResumeLayout(false);
         }
 
         #endregion
 
         private GroupBox groupBox1;
-        private GroupBox groupBox2;
-        private Button loginButton;
-        private GroupBox groupBox4;
-        public TextBox passwordTxt;
-        private GroupBox groupBox3;
-        private TextBox emailTxt;
         private GroupBox groupClassPicker;
         private ComboBox classesDropDown;
         private Label classesLbl;
         private Button createGradeSheetButton;
         private GroupBox groupBox5;
         private ComboBox numberOfSheetsComboBox;
+        private GroupBox groupBox6;
+        private GroupBox groupBox2;
+        private Button loginButton;
+        private GroupBox groupBox4;
+        public TextBox passwordTxt;
+        private GroupBox groupBox3;
+        private TextBox emailTxt;
+        private GroupBox groupBox7;
+        private Label cacheData;
+        private Button button1;
+        private Label label1;
+        private Button returnButton;
+        private ProgressBar progressBar1;
     }
 }

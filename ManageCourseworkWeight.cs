@@ -41,15 +41,18 @@ namespace AddinGrades
 
         private void RefreshListOfCoursework()
         {
-            WorkbookData data = Utils.GetExcelApplication().LoadWorkbookData();
-            var courseworkAndWeight = data.GradeSheets[GradeSheetID].CourseworkWeightedTables.Find(s => s.name == ((string)tablesList.SelectedItem)).weights;
-            flowLayoutPanel1.Controls.Clear();
-            foreach (var keyvaluepair in courseworkAndWeight)
+            if (string.IsNullOrEmpty((string)tablesList.SelectedItem) is false)
             {
-                flowLayoutPanel1.Controls.Add(
-                    new CourseworkWeightControl(keyvaluepair.Key.Name, keyvaluepair.Value * 100, (string)tablesList.SelectedItem, CourseworkDeleteEvent));
+                WorkbookData data = Utils.GetExcelApplication().LoadWorkbookData();
+                var courseworkAndWeight = data.GradeSheets[GradeSheetID].CourseworkWeightedTables.Find(s => s.name == ((string)tablesList.SelectedItem)).weights;
+                flowLayoutPanel1.Controls.Clear();
+                foreach (var keyvaluepair in courseworkAndWeight)
+                {
+                    flowLayoutPanel1.Controls.Add(
+                        new CourseworkWeightControl(keyvaluepair.Key.Name, keyvaluepair.Value * 100, (string)tablesList.SelectedItem, CourseworkDeleteEvent));
+                }
+                flowLayoutPanel1.Controls.Add(new AddNewCoursework(GradeSheetID, CourseworkAddEvent));
             }
-            flowLayoutPanel1.Controls.Add(new AddNewCoursework(GradeSheetID, CourseworkAddEvent));
         }
 
         public void OnCourseworkAdd(object? sender, (string, double) pair)

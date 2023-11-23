@@ -213,7 +213,6 @@ namespace AddinGrades
                 studentNames.AddRange(studentsFiltered); 
                 driver.Close();
                 driver.SwitchTo().Window(firstWindow);
-                driver.Close(); 
             }
             catch (Exception ex)
             {
@@ -242,9 +241,7 @@ namespace AddinGrades
                 yield return searchContext.FindElements(By.TagName("td"))[2].Text; 
         }
 
-
-
-
+         
         public static int? GetCollumnByNameIndex(string sheetID, string courseworkName, string firstCell = "A2")
         {
             Worksheet worksheet = Utils.GetWorksheetById(sheetID);

@@ -55,27 +55,33 @@ namespace AddinGrades
                     cellIteratorForFinalGrade.Formula = 
                         $"=GetFinalGrade({Utils.GetExcelColumnName(currentCell.Column)}{currentCell.Row},A{cellIteratorForFinalGrade.Row})";
                 }
-            }
+            } 
         }
 
-        //public static void LockCollumnsAndHeaders(Worksheet worksheet)
-        //{
-        //    string lastColumn = Utils.GetExcelColumnName(columnNumber: DefaultColumns.Count);
-        //    string feedbackColumnName = Utils.GetExcelColumnName(columnNumber: Utils.GetCollumnByNameIndex(worksheet, CollumnName.Feedback) + 1);
-        //    string knowledgeCollumnName = Utils.GetExcelColumnName(columnNumber: Utils.GetCollumnByNameIndex(worksheet, CollumnName.Knowledge) + 1);
-        //    string finalCollumnName = Utils.GetExcelColumnName(columnNumber: Utils.GetCollumnByNameIndex(worksheet, CollumnName.FinalGrade) + 1);
+        public static void LockCollumnsAndHeaders(Worksheet worksheet)
+        {
+            int indexLast = GradeTable.GetLastHeaderCollumnWithValue() + 1;
+            string feedbackColumn = Utils.GetExcelColumnName(indexLast);
 
-        //    using (Unprotecter unprotecter = new(worksheet))
-        //    {
-        //        //Unlock all the cells
-        //        worksheet.get_Range("A1", $"{lastColumn}100").Locked = false;
-        //        //Lock headers first
-        //        worksheet.get_Range("A2", $"{lastColumn}2").Locked = true;
-        //        worksheet.get_Range($"{feedbackColumnName}3", $"{feedbackColumnName}100").Locked = true;
-        //        worksheet.get_Range($"{knowledgeCollumnName}3", $"{knowledgeCollumnName}100").Locked = true;
-        //        worksheet.get_Range($"{finalCollumnName}3", $"{finalCollumnName}100").Locked = true; 
-        //    }
-        //}
+            using (Unprotecter unprotecter = new(worksheet))
+            {
+                //Unlock body of table
+                Range range = worksheet.get_Range($"A2", $"{feedbackColumn}100");
+                range.Locked = false;
+                //Lock headers
+                range = worksheet.get_Range($"A1", $"{feedbackColumn}1");
+                range.Locked = true;
+                 
+                range = worksheet.get_Range($"B2", $"B100");
+                for (int i = 0; i < indexLast; i++)
+                {
+                    range.Locked = true;
+                    range = range.Offset[0, 2];
+                }
+            } 
+        } 
+
+
 
     }
 }

@@ -2,6 +2,7 @@
 using ExcelDna.Integration;
 using ExcelDna.Integration.CustomUI;
 using Microsoft.Office.Interop.Excel;
+using System.Reflection;
 using Range = Microsoft.Office.Interop.Excel.Range;
 
 namespace AddinGrades
@@ -12,6 +13,10 @@ namespace AddinGrades
         public static bool CreationOfGradeSheetInProgress = false;
         public static string Version = "v1.1";
 
+        //Cache stuff that should be its own class tbh
+        public static string CacheFileName = Path.Combine(Assembly.GetExecutingAssembly().Location, "StudentCache.xml");
+        public static StudentsCache? StudentsCache;
+
         static void Main(string[] args)
         {
         }
@@ -19,6 +24,7 @@ namespace AddinGrades
         public void AutoClose()
         { 
         }
+
         public void AutoOpen()
         {
             LoggerPanel = Activator.CreateInstance(typeof(LoggerPanel)) as LoggerPanel;
@@ -29,6 +35,10 @@ namespace AddinGrades
             Utils.GetExcelApplication().WorkbookOpen += OpenWorkbook;
             Utils.GetExcelApplication().WorkbookActivate += OpenWorkbook;
             Utils.GetExcelApplication().WorkbookBeforeClose += BeforeCloseWorkbook;
+            if (File.Exists(CacheFileName))
+            {
+                StudentsCache = WorkbookData.Deserialize<StudentsCache>(File.ReadAllText(CacheFileName));
+            } 
         }
 
         private void BeforeCloseWorkbook(Workbook Wb, ref bool Cancel)

@@ -52,10 +52,14 @@ namespace AddinGrades
                                 range = range.Offset[0, 2];
                             }
                         }
+
+                        FeedbackTable.LockCollumnsAndHeaders(worksheet);
+                        worksheet.Protect();
                     }
 
                     workbookData.Version = "v1.1";
                     workbookData.Save();  
+                     
                 }
             } 
         }

@@ -87,6 +87,7 @@ namespace AddinGrades
                         finalGradeCell.Formula =
                             $"=GetFinalGrade({feedbackColumn}{feedbackWorksheet.get_Range($"{feedbackColumn}1").Row},A{finalGradeCell.Row})";
                     }
+ 
                 }
             }
 

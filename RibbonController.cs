@@ -109,19 +109,31 @@ namespace AddinGrades
             }
             if (Utils.IsFeedback())
             {
-                Program.LoggerPanel.WriteLineToPanel("This is not a gradesheet");
-                return;
-            }
-            var sheet = Utils.GetWorksheetById(Utils.GetCurrentSheetID()); 
-            if (sheet.ProtectContents)
-            {
-                sheet.Unprotect();
+                var sheet = Utils.GetFeedbackSheet();
+                if (sheet.ProtectContents)
+                {
+                    sheet.Unprotect();
+                }
+                else
+                {
+                    FeedbackTable.LockCollumnsAndHeaders(sheet);
+                    sheet.Protect();
+                }
             }
             else
             {
-                GradeTable.LockCollumnsAndHeaders(sheet);
-                sheet.Protect();
+                var sheet = Utils.GetWorksheetById(Utils.GetCurrentSheetID());
+                if (sheet.ProtectContents)
+                {
+                    sheet.Unprotect();
+                }
+                else
+                {
+                    GradeTable.LockCollumnsAndHeaders(sheet);
+                    sheet.Protect();
+                }
             }
+
         }
 
         public void OnManageCourseworkWeights(IRibbonControl control)
