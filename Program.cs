@@ -3,6 +3,7 @@ using ExcelDna.Integration;
 using ExcelDna.Integration.CustomUI;
 using Microsoft.Office.Interop.Excel;
 using System.Reflection;
+using System.Xml.Linq;
 using Range = Microsoft.Office.Interop.Excel.Range;
 
 namespace AddinGrades
@@ -14,9 +15,8 @@ namespace AddinGrades
         public static string Version = "v1.1";
 
         //Cache stuff that should be its own class tbh
-        public static string CacheFileName = Path.Combine(Assembly.GetExecutingAssembly().Location, "StudentCache.xml");
+        public static string CacheFileName = Path.Combine(Path.GetDirectoryName((string)XlCall.Excel(XlCall.xlGetName)), "StudentCache.xml");
         public static StudentsCache? StudentsCache;
-
         static void Main(string[] args)
         {
         }
@@ -59,7 +59,7 @@ namespace AddinGrades
         public static void OnSheetChange(object Sh, Range Target)
         { 
             if (Utils.IsFeedback() is false && Utils.GetCurrentSheetID() != null && CreationOfGradeSheetInProgress is false &&
-                Target.Column == 1 && Target.Row == 1)//This is a change in the alunos column
+                Target.Column == 1 && Target.Row != 1)//This is a change in the alunos column
             {
                 InsertStudentGradeFormulas(Target);
             }
@@ -81,11 +81,14 @@ namespace AddinGrades
             }
             else if (Target.Value2 is string && string.IsNullOrEmpty(Target.Value2) is false)
             {
+                Program.CreationOfGradeSheetInProgress = true;
                 GradeTable table = new GradeTable(Utils.GetCurrentSheetID());
                 table.InsertKnowledgeFunction(Target.Row);
                 table.InsertDropdownForWeightedTable(Target.Row);
                 table.InsertFinalGrade(Target.Row); 
                 table.InsertFeedback(Target.Row);
+                Program.CreationOfGradeSheetInProgress = false;
+                Utils.GetExcelApplication().ActiveWorkbook.SheetChange += Program.OnSheetChange;
             }
         }
     }

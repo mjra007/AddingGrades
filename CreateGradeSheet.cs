@@ -68,14 +68,15 @@ namespace AddinGrades
                 }
             }
 
-            //For some reason chrome driver makes it so you have to bind this event again 
-            Utils.GetExcelApplication().ActiveWorkbook.SheetChange += Program.OnSheetChange;
+
             Worksheet feedback = Utils.GetFeedbackSheet();
             if (feedback!=null)
             {
                 FeedbackTable.LockCollumnsAndHeaders(feedback);
                 feedback.Protect();
-            } 
+            }
+            //For some reason chrome driver makes it so you have to bind this event again 
+            Utils.GetExcelApplication().ActiveWorkbook.SheetChange += Program.OnSheetChange;
             Program.CreationOfGradeSheetInProgress = false;
             this.Close();
         }
