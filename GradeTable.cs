@@ -1,5 +1,7 @@
 ﻿using AddinGrades.DTO;
 using ExcelDna.Integration;
+using Jint;
+using Jint.Native;
 using Microsoft.Office.Interop.Excel;
 using Microsoft.VisualStudio.Services.Common; 
 using System.Reflection;
@@ -12,6 +14,13 @@ namespace AddinGrades
 {
     public class GradeTable
     {
+        public static readonly JsValue JSPredictedGrade = new Engine()
+                         .Execute(@"
+function CalculatePredictedGrade(atitude, knowledge) {
+var finalGrade = atitude * 0.05 + atitude * 0.05 + atitude * 0.05 + knowledge * 0.1 +  knowledge * 0.1 + knowledge * 0.1 + knowledge * 0.2 + knowledge * 0.2+  knowledge * 0.15;
+return finalGrade.toFixed(1);  
+}")
+                         .GetValue("CalculatePredictedGrade");
         [Flags]
         internal enum XlType12 : uint
         {
@@ -255,9 +264,10 @@ namespace AddinGrades
             double? atitudesGradeNullable = ((ExcelReference)atitude).GetValue() as double?;
             double knowledgeGrade = knowledgeGradeNullable.HasValue ? knowledgeGradeNullable.Value : 0;
             double atitudesGrade = atitudesGradeNullable.HasValue ? atitudesGradeNullable.Value : 0;
-            //knowledge is not multipled by 0.85% because it is already scaled by default 
-            double finalGrade = knowledgeGrade * 0.85 + Math.Round(atitudesGrade, 0) * 0.15d;
-            return Math.Round(toFixed(finalGrade,1),0, MidpointRounding.AwayFromZero);
+
+            double finalGrade = double.Parse(JSPredictedGrade.Invoke(atitudesGrade, knowledgeGrade).AsString()); 
+            double finalRounding = Math.Round(finalGrade, 0, MidpointRounding.AwayFromZero);
+            return finalRounding;
         }
 
         public static double toFixed(double number, uint decimals)
