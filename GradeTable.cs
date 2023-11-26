@@ -78,7 +78,6 @@ namespace AddinGrades
                     finalGradeCell.Value = "Final Grade";
                     Range feedbackCell = feedbackWorksheet.get_Range($"{feedbackColumn}1");
                     feedbackCell.Value = $"=GetSheetName(\"{GradeSheetID}\")";
-
                     feedbackCell.ColumnWidth = 25;
 
                     foreach (string name in studentNames)
@@ -257,7 +256,13 @@ namespace AddinGrades
             double knowledgeGrade = knowledgeGradeNullable.HasValue ? knowledgeGradeNullable.Value : 0;
             double atitudesGrade = atitudesGradeNullable.HasValue ? atitudesGradeNullable.Value : 0;
             //knowledge is not multipled by 0.85% because it is already scaled by default 
-            return Math.Round(Math.Round(knowledgeGrade/* * 0.85*/ + Math.Round(atitudesGrade,0) * 0.15, 1, MidpointRounding.ToZero),0, MidpointRounding.AwayFromZero);
+            double finalGrade = knowledgeGrade * 0.85 + Math.Round(atitudesGrade, 0) * 0.15d;
+            return Math.Round(toFixed(finalGrade,1),0, MidpointRounding.AwayFromZero);
+        }
+
+        public static double toFixed(double number, uint decimals)
+        {
+            return double.Parse(number.ToString("N" + decimals));
         }
 
         public static string cacheFeedbackSheetID;

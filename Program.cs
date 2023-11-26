@@ -61,6 +61,11 @@ namespace AddinGrades
             if (Utils.IsFeedback() is false && Utils.GetCurrentSheetID() != null && CreationOfGradeSheetInProgress is false &&
                 Target.Column == 1 && Target.Row != 1)//This is a change in the alunos column
             {
+                //Empty clean row maybe
+                if(Target.Value is null)
+                {
+                    
+                }
                 InsertStudentGradeFormulas(Target);
             }
         }

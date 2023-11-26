@@ -52,7 +52,13 @@ namespace AddinGrades
             deleteGroup.Visible = false;
             deleteGroup.Enabled = false;
         }
-         
 
+        private void courseworkWeight_TextChanged(object sender, EventArgs e)
+        {
+            if(double.TryParse(courseworkWeight.Text, out double courseworkGrade))
+            {
+                percentageTotalGradeLabel.Text = courseworkGrade*0.85+"%";
+            }
+        }
     }
 }

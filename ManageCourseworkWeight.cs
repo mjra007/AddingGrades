@@ -119,9 +119,9 @@ namespace AddinGrades
                 }
             }
 
-            if (totalWeigths != 85)
+            if (totalWeigths != 100)
             {
-                MessageBox.Show($"The total weight percentage should be 85%");
+                MessageBox.Show($"The total weight percentage should be 100%");
                 return;
             }
 
@@ -160,7 +160,7 @@ namespace AddinGrades
                 }
 
             }
-            groupBox2.Text = $"Total: {total}/85  Unassigned: {85 - total}";
+            groupBox2.Text = $"Total: {total}/100  Unassigned: {100 - total}";
         }
 
     }
