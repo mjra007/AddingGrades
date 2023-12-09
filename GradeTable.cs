@@ -486,8 +486,9 @@ return finalGrade.toFixed(1);
 
 
         public static int FindLastStudentRow(Worksheet sheet)
-        { 
-            Range cell = sheet.get_Range($"A3");
+        {
+            string columnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(sheet, CollumnName.Student) + 1);
+            Range cell = sheet.get_Range($"{columnName}3");
             int lastRow = 3;
             while (string.IsNullOrEmpty(cell.Value2 as string) is false)
             {
@@ -561,9 +562,9 @@ return finalGrade.toFixed(1);
                 //reference needs to be updated so it gets the new inserted cell instead of the moved one
                 collumnNameCell = sheet.Range[$"{Utils.GetExcelColumnName(insertCollumn)}2"];
                 collumnNameCell.Value2 = coursework.Name;
+                collumnNameCell.EntireColumn.AutoFit();
                 insertCollumn++;
-            }
-            sheet.Columns.AutoFit();
+            } 
             sheet.Protect();
         }
 
