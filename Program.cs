@@ -2,8 +2,6 @@
 using ExcelDna.Integration;
 using ExcelDna.Integration.CustomUI;
 using Microsoft.Office.Interop.Excel;
-using System.Reflection;
-using System.Xml.Linq;
 using Range = Microsoft.Office.Interop.Excel.Range;
 
 namespace AddinGrades

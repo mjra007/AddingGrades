@@ -120,7 +120,7 @@ return finalGrade.toFixed(1);
             worksheet.get_Range("A2", $"{lastColumn}2").Interior.Color = ColorTranslator.ToOle(Color.LightGoldenrodYellow);
   
 
-            currentCell = worksheet.get_Range("C3");
+            currentCell = worksheet.get_Range("B3");
             foreach (string name in studentNames)
             {
                 currentCell.Cells[1] = name;
