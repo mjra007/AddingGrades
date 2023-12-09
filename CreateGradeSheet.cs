@@ -58,12 +58,12 @@ namespace AddinGrades
                     data.Save();
                     if (classesDropDown.SelectedItem is null)
                     {
-                        new GradeTable(gradeSheetID).CreateDefaultTable(worksheet, data, app, new List<string>());
+                        new GradeTable(gradeSheetID).CreateDefaultTable(worksheet, data, app, new List<string>(), null);
                     }
                     else
                     {
                         IEnumerable<string> studentNames = Program.StudentsCache.StudnetsByClass[(string)classesDropDown.SelectedItem];
-                        new GradeTable(gradeSheetID).CreateDefaultTable(worksheet, data, app, studentNames);
+                        new GradeTable(gradeSheetID).CreateDefaultTable(worksheet, data, app, studentNames, (string)classesDropDown.SelectedItem);
                     }
                 }
             }

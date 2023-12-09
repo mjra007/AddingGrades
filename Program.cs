@@ -13,8 +13,9 @@ namespace AddinGrades
         public static LoggerPanel? LoggerPanel;
         public static bool CreationOfGradeSheetInProgress = false;
         public static string Version = "v1.1";
+        public static string ExcelAddinPathDir = Path.GetDirectoryName((string)XlCall.Excel(XlCall.xlGetName));
         //Cache stuff that should be its own class tbh
-        public static string CacheFileName = Path.Combine(Path.GetDirectoryName((string)XlCall.Excel(XlCall.xlGetName)), "StudentCache.xml");
+        public static string CacheFileName = Path.Combine(ExcelAddinPathDir, "StudentCache.xml");
         public static StudentsCache? StudentsCache;
         static void Main(string[] args)
         {

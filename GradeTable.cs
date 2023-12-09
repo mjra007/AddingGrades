@@ -3,6 +3,7 @@ using ExcelDna.Integration;
 using Jint;
 using Jint.Native;
 using Microsoft.Office.Interop.Excel;
+using Microsoft.VisualBasic;
 using Microsoft.VisualStudio.Services.Common; 
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -44,11 +45,13 @@ return finalGrade.toFixed(1);
             public const string FinalGrade = "Final Grade";
             public const string Feedback = "Sínteses";
             public const string Observations = "Observations";
+            public const string StudentImages = " ";
 
         }
 
         static readonly List<string> DefaultColumns = new()
         {
+            CollumnName.StudentImages,
             CollumnName.Student,
             CollumnName.Knowledge,
             CollumnName.Atitudes,
@@ -65,7 +68,7 @@ return finalGrade.toFixed(1);
             GradeSheetID = gradeSheetID;
         }
 
-        public void CreateDefaultTable(Worksheet worksheet, WorkbookData data, Application app, IEnumerable<string> studentNames)
+        public void CreateDefaultTable(Worksheet worksheet, WorkbookData data, Application app, IEnumerable<string> studentNames, string className)
         { 
             //Create feedback sheet if needed
             if (data.FeedbackSheetID is null)
@@ -100,6 +103,7 @@ return finalGrade.toFixed(1);
             }
 
             worksheet.Select();
+
             Range currentCell = worksheet.get_Range("A2");
 
             foreach (string columnName in DefaultColumns)
@@ -112,23 +116,50 @@ return finalGrade.toFixed(1);
 
             worksheet.get_Range("A2", $"{lastColumn}2").Cells.Font.Size = 13;
             worksheet.get_Range("A2", $"{lastColumn}2").Interior.Color = ColorTranslator.ToOle(Color.LightGoldenrodYellow);
+  
 
-
-            currentCell = worksheet.get_Range("A3");
+            currentCell = worksheet.get_Range("B3");
             foreach (string name in studentNames)
             {
                 currentCell.Cells[1] = name;
                 currentCell = currentCell.Offset[1, 0];  
             }
             worksheet.Columns.AutoFit();
+
+             
+            currentCell  = worksheet.get_Range("A3");
+
+            double rColRow = 6; // Ratio of units of measure: columns widths to row heights
+            double rImgColWidth = 5.9; // Ratio of units of measure: image size and column widths
+
+            double lastMaxWidth = 0d;
+            foreach (string name in studentNames)
+            {
+                if (File.Exists(Path.Combine(Program.ExcelAddinPathDir, "StudentImages", $"{className}-{name}.png")))
+                {
+                    Pictures excelPictures = (Pictures)worksheet.Pictures(Type.Missing);
+                    Picture excelPicture = excelPictures.Insert(Path.Combine(Program.ExcelAddinPathDir, "StudentImages", $"{className}-{name}.png"));
+                    excelPicture.Top = currentCell.Top;
+                    excelPicture.Left = currentCell.Left;
+                    if (excelPicture.Width > lastMaxWidth)
+                    {
+                        currentCell.ColumnWidth = (excelPicture.Width / rImgColWidth);
+                        lastMaxWidth = excelPicture.Width;
+                    }
+                    currentCell.RowHeight = excelPicture.Height;
+                    currentCell = currentCell.Offset[1, 0];
+                }
+            }
+
             if (!studentNames.Any())
             { 
-                worksheet.Columns[1].ColumnWidth = 25;
+                worksheet.Columns[2].ColumnWidth = 25;
             }
             if(studentNames.Any())
             { 
                 Program.InsertStudentGradeFormulas(worksheet.get_Range("A3", $"A{3 + studentNames.Count() - 1}")); 
-            }
+            } 
+
             LockCollumnsAndHeaders();
             ApplyStyles();
             worksheet.Protect();
@@ -185,9 +216,11 @@ return finalGrade.toFixed(1);
                     string courseworkColumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(worksheet, item.Name)+1);
                     range = worksheet.get_Range($"{courseworkColumnName}3", $"{courseworkColumnName}100");
                     range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
+                    range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
                 }
 
                 //Style the final grade, knowledge and feedback
+                string studentsColumnName  = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(worksheet, CollumnName.Student) + 1);
                 string feedbackColumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(worksheet, CollumnName.Feedback) + 1);
                 string knowledgeCollumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(worksheet, CollumnName.Knowledge) + 1);
                 string finalCollumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(worksheet, CollumnName.FinalGrade) + 1);
@@ -195,14 +228,22 @@ return finalGrade.toFixed(1);
                 string weightedTableCollumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(worksheet, CollumnName.CourseworkWeigthtedTable) + 1);
                 range = worksheet.get_Range($"{feedbackColumnName}3", $"{feedbackColumnName}100");
                 range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
+                range.VerticalAlignment = XlVAlign.xlVAlignCenter;
                 range = worksheet.get_Range($"{knowledgeCollumnName}3", $"{knowledgeCollumnName}100");
                 range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
+                range.VerticalAlignment = XlVAlign.xlVAlignCenter;
                 range = worksheet.get_Range($"{finalCollumnName}3", $"{finalCollumnName}100");
                 range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
+                range.VerticalAlignment = XlVAlign.xlVAlignCenter;
                 range = worksheet.get_Range($"{atitudesCollumnName}3", $"{atitudesCollumnName}100");
                 range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
+                range.VerticalAlignment = XlVAlign.xlVAlignCenter;
                 range = worksheet.get_Range($"{weightedTableCollumnName}3", $"{weightedTableCollumnName}100");
                 range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
+                range.VerticalAlignment = XlVAlign.xlVAlignCenter;
+                range = worksheet.get_Range($"{studentsColumnName}3", $"{studentsColumnName}100");
+                range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
+                range.VerticalAlignment = XlVAlign.xlVAlignCenter;
             }
             if (protectAtTheEnd) 
                 worksheet.Protect(); 
@@ -551,10 +592,10 @@ return finalGrade.toFixed(1);
         public int GetCourseworkIndex(string courseworkName)
         {
             Worksheet worksheet = Utils.GetWorksheetById(GradeSheetID);
-            Range currentCell = worksheet.get_Range("A2");
-            int counter = 0;
+            Range currentCell = worksheet.get_Range("B2");
+            int counter = 1;
 
-            while (currentCell.Value2.ToString().Equals(courseworkName) is false)
+            while ( currentCell.Value2.ToString().Equals(courseworkName) is false)
             {
                 string c = currentCell.Value2;
                 currentCell = currentCell.Offset[0, 1];
