@@ -46,11 +46,13 @@ return finalGrade.toFixed(1);
             public const string Feedback = "Sínteses";
             public const string Observations = "Observations";
             public const string StudentImages = " ";
+            public const string StudentNumber = " ";
 
         }
 
         static readonly List<string> DefaultColumns = new()
         {
+            //CollumnName.StudentNumber,
             CollumnName.StudentImages,
             CollumnName.Student,
             CollumnName.Knowledge,
@@ -118,7 +120,7 @@ return finalGrade.toFixed(1);
             worksheet.get_Range("A2", $"{lastColumn}2").Interior.Color = ColorTranslator.ToOle(Color.LightGoldenrodYellow);
   
 
-            currentCell = worksheet.get_Range("B3");
+            currentCell = worksheet.get_Range("C3");
             foreach (string name in studentNames)
             {
                 currentCell.Cells[1] = name;
@@ -126,7 +128,6 @@ return finalGrade.toFixed(1);
             }
             worksheet.Columns.AutoFit();
 
-             
             currentCell  = worksheet.get_Range("A3");
 
             double rColRow = 6; // Ratio of units of measure: columns widths to row heights
@@ -216,7 +217,7 @@ return finalGrade.toFixed(1);
                     string courseworkColumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(worksheet, item.Name)+1);
                     range = worksheet.get_Range($"{courseworkColumnName}3", $"{courseworkColumnName}100");
                     range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
-                    range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
+                    range.VerticalAlignment = XlVAlign.xlVAlignCenter;
                 }
 
                 //Style the final grade, knowledge and feedback
@@ -242,7 +243,7 @@ return finalGrade.toFixed(1);
                 range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
                 range.VerticalAlignment = XlVAlign.xlVAlignCenter;
                 range = worksheet.get_Range($"{studentsColumnName}3", $"{studentsColumnName}100");
-                range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
+                range.HorizontalAlignment = XlHAlign.xlHAlignLeft;
                 range.VerticalAlignment = XlVAlign.xlVAlignCenter;
             }
             if (protectAtTheEnd) 

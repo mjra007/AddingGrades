@@ -358,5 +358,15 @@ namespace AddinGrades
             };
             return found == false ? counter : null;
         }
+
+        public static IEnumerable<string> GetStudentNames(Worksheet sheet)
+        {
+            Range studentCollum = sheet.get_Range($"{Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(sheet, GradeTable.CollumnName.Student) + 1)}2");
+            while(string.IsNullOrEmpty(studentCollum.Value2) is false)
+            {
+                yield return studentCollum.Value2;
+                studentCollum = studentCollum.Offset[1, 0];
+            }
+        }
     }
 }

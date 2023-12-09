@@ -12,7 +12,8 @@ namespace AddinGrades.DTO
         //Key is the worksheet code name and the value is the gradesheet object
         public SerializableDictionary<string, GradeSheet> GradeSheets = new();
         public string FeedbackSheetID;
-        public string Version="v1";
+        public string Version;
+        public string ClassName;
         //public Queue<string> History = new(10);
 
         public WorkbookData() {
