@@ -80,30 +80,6 @@ namespace AddinGrades
             }
         }
 
-        private static string? FindClassWithStudents(IEnumerable<string> studentNames)
-        {
-            if (Program.StudentsCache is not null)
-            {
-                foreach (var pair in Program.StudentsCache.StudnetsByClass)
-                {
-                    string className = pair.Key;
-
-                    int threshold = 3;
-                    int counter = 0;
-                    foreach(string studentName in studentNames)
-                    {
-                        if (pair.Value.Contains(studentName))
-                        {
-                            counter++;
-                        }
-
-                        if (counter == threshold) return className; 
-                    }
-                }
-            }
-            return string.Empty;
-        }
-
         //Updates project from 1.0 to 1.1
         private static void UpdateFrom1To1Dot1()
         {
@@ -161,8 +137,40 @@ namespace AddinGrades
         {
             if (UpdaterDictionary.TryGetValue((sheetVersion, Program.Version), out var updaterMethod))
             {
-                updaterMethod.Invoke();
+                try
+                {
+                    updaterMethod.Invoke(); 
+                }
+                catch(Exception ex)
+                {
+                    Program.LoggerPanel.WriteLineToPanel("[Error] Could not upgrade sheet! ");
+                }
             }
         }
+
+        private static string? FindClassWithStudents(IEnumerable<string> studentNames)
+        {
+            if (Program.StudentsCache is not null)
+            {
+                foreach (var pair in Program.StudentsCache.StudnetsByClass)
+                {
+                    string className = pair.Key;
+
+                    int threshold = 3;
+                    int counter = 0;
+                    foreach (string studentName in studentNames)
+                    {
+                        if (pair.Value.Contains(studentName))
+                        {
+                            counter++;
+                        }
+
+                        if (counter == threshold) return className;
+                    }
+                }
+            }
+            return string.Empty;
+        }
+
     }
 }
