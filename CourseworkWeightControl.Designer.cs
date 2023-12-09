@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.percentageTotalGradeLabel = new System.Windows.Forms.Label();
             this.deleteCourseworkBtn = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.courseworkWeight = new System.Windows.Forms.TextBox();
@@ -38,13 +40,11 @@
             this.noButton = new System.Windows.Forms.Button();
             this.yesButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.percentageTotalGradeLabel = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.deleteGroup.SuspendLayout();
-            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -60,6 +60,24 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Weight";
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.percentageTotalGradeLabel);
+            this.groupBox4.Location = new System.Drawing.Point(237, 24);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(94, 53);
+            this.groupBox4.TabIndex = 3;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "% Total Grade";
+            // 
+            // percentageTotalGradeLabel
+            // 
+            this.percentageTotalGradeLabel.AutoSize = true;
+            this.percentageTotalGradeLabel.Location = new System.Drawing.Point(15, 22);
+            this.percentageTotalGradeLabel.Name = "percentageTotalGradeLabel";
+            this.percentageTotalGradeLabel.Size = new System.Drawing.Size(0, 15);
+            this.percentageTotalGradeLabel.TabIndex = 0;
+            // 
             // deleteCourseworkBtn
             // 
             this.deleteCourseworkBtn.BackColor = System.Drawing.Color.Transparent;
@@ -73,6 +91,7 @@
             this.deleteCourseworkBtn.Size = new System.Drawing.Size(17, 18);
             this.deleteCourseworkBtn.TabIndex = 2;
             this.deleteCourseworkBtn.UseVisualStyleBackColor = false;
+            this.deleteCourseworkBtn.Click += new System.EventHandler(this.deleteCourseworkBtn_Click);
             // 
             // groupBox3
             // 
@@ -132,6 +151,7 @@
             this.noButton.TabIndex = 2;
             this.noButton.Text = "no";
             this.noButton.UseVisualStyleBackColor = true;
+            this.noButton.Click += new System.EventHandler(this.noButton_Click);
             // 
             // yesButton
             // 
@@ -141,6 +161,7 @@
             this.yesButton.TabIndex = 1;
             this.yesButton.Text = "yes";
             this.yesButton.UseVisualStyleBackColor = true;
+            this.yesButton.Click += new System.EventHandler(this.yesButton_Click);
             // 
             // label1
             // 
@@ -153,24 +174,6 @@
             this.label1.Text = "Are you sure you want to delete this coursework?";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // groupBox4
-            // 
-            this.groupBox4.Controls.Add(this.percentageTotalGradeLabel);
-            this.groupBox4.Location = new System.Drawing.Point(237, 24);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(94, 53);
-            this.groupBox4.TabIndex = 3;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "% Total Grade";
-            // 
-            // percentageTotalGradeLabel
-            // 
-            this.percentageTotalGradeLabel.AutoSize = true;
-            this.percentageTotalGradeLabel.Location = new System.Drawing.Point(15, 22);
-            this.percentageTotalGradeLabel.Name = "percentageTotalGradeLabel";
-            this.percentageTotalGradeLabel.Size = new System.Drawing.Size(0, 15);
-            this.percentageTotalGradeLabel.TabIndex = 0;
-            // 
             // CourseworkWeightControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -180,13 +183,13 @@
             this.Name = "CourseworkWeightControl";
             this.Size = new System.Drawing.Size(338, 91);
             this.groupBox1.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.deleteGroup.ResumeLayout(false);
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
 
         }
