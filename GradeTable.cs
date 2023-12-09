@@ -651,7 +651,8 @@ return finalGrade.toFixed(1);
         {
             Application app = ExcelDnaUtil.Application as Application;
             Worksheet worksheet = app.ActiveSheet as Worksheet;
-            Range currentCell = worksheet.get_Range("A3");
+            string studentColumn = Utils.GetExcelColumnName(GetCollumnByNameIndex(CollumnName.Student) + 1);
+            Range currentCell = worksheet.get_Range($"{studentColumn}3");
             StringBuilder sb = new();
             string knowledgeColumn = Utils.GetExcelColumnName(GetCollumnByNameIndex(CollumnName.Knowledge)+1); 
             string finalGradeColumn = Utils.GetExcelColumnName(GetCollumnByNameIndex(CollumnName.FinalGrade)+1); 
@@ -678,7 +679,8 @@ return finalGrade.toFixed(1);
         {
             Application app = ExcelDnaUtil.Application as Application;
             Worksheet worksheet = app.ActiveSheet as Worksheet;
-            Range currentCell = worksheet.get_Range("A3");
+            string studentColumn = Utils.GetExcelColumnName(GetCollumnByNameIndex(CollumnName.Student) + 1);
+            Range currentCell = worksheet.get_Range($"{studentColumn}3");
             StringBuilder sb = new();
             string feedbackColumn = Utils.GetExcelColumnName(GetCollumnByNameIndex(CollumnName.Feedback)+1);
             for (int i = 3; i < FindLastStudentRow(worksheet); i++)
