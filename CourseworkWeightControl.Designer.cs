@@ -28,167 +28,169 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.deleteCourseworkBtn = new System.Windows.Forms.Button();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.courseworkWeight = new System.Windows.Forms.TextBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.courseworkName = new System.Windows.Forms.Label();
-            this.deleteGroup = new System.Windows.Forms.GroupBox();
-            this.noButton = new System.Windows.Forms.Button();
-            this.yesButton = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.percentageTotalGradeLabel = new System.Windows.Forms.Label();
-            this.groupBox1.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.deleteGroup.SuspendLayout();
-            this.groupBox4.SuspendLayout();
-            this.SuspendLayout();
+            groupBox1 = new GroupBox();
+            groupBox4 = new GroupBox();
+            percentageTotalGradeLabel = new Label();
+            deleteCourseworkBtn = new Button();
+            groupBox3 = new GroupBox();
+            courseworkWeight = new TextBox();
+            groupBox2 = new GroupBox();
+            courseworkName = new Label();
+            deleteGroup = new GroupBox();
+            noButton = new Button();
+            yesButton = new Button();
+            label1 = new Label();
+            groupBox1.SuspendLayout();
+            groupBox4.SuspendLayout();
+            groupBox3.SuspendLayout();
+            groupBox2.SuspendLayout();
+            deleteGroup.SuspendLayout();
+            SuspendLayout();
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.groupBox4);
-            this.groupBox1.Controls.Add(this.deleteCourseworkBtn);
-            this.groupBox1.Controls.Add(this.groupBox3);
-            this.groupBox1.Controls.Add(this.groupBox2);
-            this.groupBox1.Location = new System.Drawing.Point(3, 3);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(331, 83);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Weight";
-            // 
-            // deleteCourseworkBtn
-            // 
-            this.deleteCourseworkBtn.BackColor = System.Drawing.Color.Transparent;
-            this.deleteCourseworkBtn.BackgroundImage = global::AddinGrades.Properties.Resources.close;
-            this.deleteCourseworkBtn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.deleteCourseworkBtn.FlatAppearance.BorderSize = 0;
-            this.deleteCourseworkBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.deleteCourseworkBtn.ForeColor = System.Drawing.Color.Transparent;
-            this.deleteCourseworkBtn.Location = new System.Drawing.Point(314, 0);
-            this.deleteCourseworkBtn.Name = "deleteCourseworkBtn";
-            this.deleteCourseworkBtn.Size = new System.Drawing.Size(17, 18);
-            this.deleteCourseworkBtn.TabIndex = 2;
-            this.deleteCourseworkBtn.UseVisualStyleBackColor = false;
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.courseworkWeight);
-            this.groupBox3.Location = new System.Drawing.Point(158, 24);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(73, 55);
-            this.groupBox3.TabIndex = 1;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Weight %";
-            // 
-            // courseworkWeight
-            // 
-            this.courseworkWeight.Location = new System.Drawing.Point(6, 22);
-            this.courseworkWeight.Name = "courseworkWeight";
-            this.courseworkWeight.Size = new System.Drawing.Size(59, 23);
-            this.courseworkWeight.TabIndex = 0;
-            this.courseworkWeight.TextChanged += new System.EventHandler(this.courseworkWeight_TextChanged);
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.courseworkName);
-            this.groupBox2.Location = new System.Drawing.Point(6, 22);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(146, 56);
-            this.groupBox2.TabIndex = 0;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Coursework Name";
-            // 
-            // courseworkName
-            // 
-            this.courseworkName.AutoSize = true;
-            this.courseworkName.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.courseworkName.Location = new System.Drawing.Point(6, 19);
-            this.courseworkName.Name = "courseworkName";
-            this.courseworkName.Size = new System.Drawing.Size(0, 20);
-            this.courseworkName.TabIndex = 0;
-            // 
-            // deleteGroup
-            // 
-            this.deleteGroup.Controls.Add(this.noButton);
-            this.deleteGroup.Controls.Add(this.yesButton);
-            this.deleteGroup.Controls.Add(this.label1);
-            this.deleteGroup.Enabled = false;
-            this.deleteGroup.Location = new System.Drawing.Point(3, 3);
-            this.deleteGroup.Name = "deleteGroup";
-            this.deleteGroup.Size = new System.Drawing.Size(331, 85);
-            this.deleteGroup.TabIndex = 3;
-            this.deleteGroup.TabStop = false;
-            this.deleteGroup.Text = "Confirmation";
-            // 
-            // noButton
-            // 
-            this.noButton.Location = new System.Drawing.Point(166, 56);
-            this.noButton.Name = "noButton";
-            this.noButton.Size = new System.Drawing.Size(159, 23);
-            this.noButton.TabIndex = 2;
-            this.noButton.Text = "no";
-            this.noButton.UseVisualStyleBackColor = true;
-            // 
-            // yesButton
-            // 
-            this.yesButton.Location = new System.Drawing.Point(6, 56);
-            this.yesButton.Name = "yesButton";
-            this.yesButton.Size = new System.Drawing.Size(154, 23);
-            this.yesButton.TabIndex = 1;
-            this.yesButton.Text = "yes";
-            this.yesButton.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label1.Location = new System.Drawing.Point(9, 16);
-            this.label1.Margin = new System.Windows.Forms.Padding(0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(312, 45);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Are you sure you want to delete this coursework?";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            groupBox1.Controls.Add(groupBox4);
+            groupBox1.Controls.Add(deleteCourseworkBtn);
+            groupBox1.Controls.Add(groupBox3);
+            groupBox1.Controls.Add(groupBox2);
+            groupBox1.Location = new Point(3, 3);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(331, 83);
+            groupBox1.TabIndex = 0;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Peso";
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.percentageTotalGradeLabel);
-            this.groupBox4.Location = new System.Drawing.Point(237, 24);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(94, 53);
-            this.groupBox4.TabIndex = 3;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "% Total Grade";
+            groupBox4.Controls.Add(percentageTotalGradeLabel);
+            groupBox4.Location = new Point(237, 22);
+            groupBox4.Name = "groupBox4";
+            groupBox4.Size = new Size(94, 55);
+            groupBox4.TabIndex = 3;
+            groupBox4.TabStop = false;
+            groupBox4.Text = "% Nota Total";
             // 
             // percentageTotalGradeLabel
             // 
-            this.percentageTotalGradeLabel.AutoSize = true;
-            this.percentageTotalGradeLabel.Location = new System.Drawing.Point(15, 22);
-            this.percentageTotalGradeLabel.Name = "percentageTotalGradeLabel";
-            this.percentageTotalGradeLabel.Size = new System.Drawing.Size(0, 15);
-            this.percentageTotalGradeLabel.TabIndex = 0;
+            percentageTotalGradeLabel.AutoSize = true;
+            percentageTotalGradeLabel.Location = new Point(15, 22);
+            percentageTotalGradeLabel.Name = "percentageTotalGradeLabel";
+            percentageTotalGradeLabel.Size = new Size(0, 15);
+            percentageTotalGradeLabel.TabIndex = 0;
+            // 
+            // deleteCourseworkBtn
+            // 
+            deleteCourseworkBtn.BackColor = Color.Transparent;
+            deleteCourseworkBtn.BackgroundImage = Properties.Resources.close;
+            deleteCourseworkBtn.BackgroundImageLayout = ImageLayout.Stretch;
+            deleteCourseworkBtn.FlatAppearance.BorderSize = 0;
+            deleteCourseworkBtn.FlatStyle = FlatStyle.Flat;
+            deleteCourseworkBtn.ForeColor = Color.Transparent;
+            deleteCourseworkBtn.Location = new Point(314, 0);
+            deleteCourseworkBtn.Name = "deleteCourseworkBtn";
+            deleteCourseworkBtn.Size = new Size(17, 18);
+            deleteCourseworkBtn.TabIndex = 2;
+            deleteCourseworkBtn.UseVisualStyleBackColor = false;
+            deleteCourseworkBtn.Click += deleteCourseworkBtn_Click;
+            // 
+            // groupBox3
+            // 
+            groupBox3.Controls.Add(courseworkWeight);
+            groupBox3.Location = new Point(158, 22);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Size = new Size(73, 57);
+            groupBox3.TabIndex = 1;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "Peso %";
+            // 
+            // courseworkWeight
+            // 
+            courseworkWeight.Location = new Point(6, 22);
+            courseworkWeight.Name = "courseworkWeight";
+            courseworkWeight.Size = new Size(59, 23);
+            courseworkWeight.TabIndex = 0;
+            courseworkWeight.TextChanged += courseworkWeight_TextChanged;
+            // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(courseworkName);
+            groupBox2.Location = new Point(6, 22);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(146, 56);
+            groupBox2.TabIndex = 0;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Nome";
+            // 
+            // courseworkName
+            // 
+            courseworkName.AutoSize = true;
+            courseworkName.Font = new Font("Segoe UI", 11F, FontStyle.Regular, GraphicsUnit.Point);
+            courseworkName.Location = new Point(6, 19);
+            courseworkName.Name = "courseworkName";
+            courseworkName.Size = new Size(0, 20);
+            courseworkName.TabIndex = 0;
+            // 
+            // deleteGroup
+            // 
+            deleteGroup.Controls.Add(noButton);
+            deleteGroup.Controls.Add(yesButton);
+            deleteGroup.Controls.Add(label1);
+            deleteGroup.Enabled = false;
+            deleteGroup.Location = new Point(3, 3);
+            deleteGroup.Name = "deleteGroup";
+            deleteGroup.Size = new Size(331, 85);
+            deleteGroup.TabIndex = 3;
+            deleteGroup.TabStop = false;
+            deleteGroup.Text = "Confirmation";
+            // 
+            // noButton
+            // 
+            noButton.Location = new Point(166, 56);
+            noButton.Name = "noButton";
+            noButton.Size = new Size(159, 23);
+            noButton.TabIndex = 2;
+            noButton.Text = "no";
+            noButton.UseVisualStyleBackColor = true;
+            noButton.Click += noButton_Click;
+            // 
+            // yesButton
+            // 
+            yesButton.Location = new Point(6, 56);
+            yesButton.Name = "yesButton";
+            yesButton.Size = new Size(154, 23);
+            yesButton.TabIndex = 1;
+            yesButton.Text = "yes";
+            yesButton.UseVisualStyleBackColor = true;
+            yesButton.Click += yesButton_Click;
+            // 
+            // label1
+            // 
+            label1.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
+            label1.Location = new Point(9, 16);
+            label1.Margin = new Padding(0);
+            label1.Name = "label1";
+            label1.Size = new Size(312, 45);
+            label1.TabIndex = 0;
+            label1.Text = "Are you sure you want to delete this coursework?";
+            label1.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // CourseworkWeightControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.deleteGroup);
-            this.Name = "CourseworkWeightControl";
-            this.Size = new System.Drawing.Size(338, 91);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.deleteGroup.ResumeLayout(false);
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(groupBox1);
+            Controls.Add(deleteGroup);
+            Name = "CourseworkWeightControl";
+            Size = new Size(338, 91);
+            groupBox1.ResumeLayout(false);
+            groupBox4.ResumeLayout(false);
+            groupBox4.PerformLayout();
+            groupBox3.ResumeLayout(false);
+            groupBox3.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
+            deleteGroup.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         #endregion

@@ -24,14 +24,14 @@ namespace AddinGrades
         <tabs>
           <tab id='tab1' label='Grades Plugin'>
             <group id='group1' label='GradeSheet Controls'>
-              <button id='gradeSheetButton' imageMso='MicrosoftVisualFoxPro' label='Make this worksheet a gradesheet' onAction='OnGradeSheetCreatePressed' size='large'/>
-              <button id='manageCourseworkWeights' imageMso='FunctionWizard' label='Manage Coursework Weights' onAction='OnManageCourseworkWeights' size='large'/>            
+              <button id='gradeSheetButton' imageMso='MicrosoftVisualFoxPro' label='Criar folha de notas' onAction='OnGradeSheetCreatePressed' size='large'/>
+              <button id='manageCourseworkWeights' imageMso='FunctionWizard' label='Editar pesos de momentos de avaliação' onAction='OnManageCourseworkWeights' size='large'/>            
             </group >
             <group id ='group2' label='Gradesheet Utilities'>
-              <button id='UnlockLock' imageMso='Lock'  label='Unlock or Lock sheet' onAction='UnlockSheet' size='large'/>  
+              <button id='UnlockLock' imageMso='Lock'  label='Desbloquear/Bloquear folha' onAction='UnlockSheet' size='large'/>  
               <button id='SetStyleOfTable' imageMso='FieldShading'  label='Set  style of table' onAction='SetStyleOfTable' size='large'/>  
-              <button id='CopyGradeString' imageMso='Copy' label='Copy grades csv string' onAction='OnCopyGradeString' size='large'/>
-              <button id='CopyFeedbackString' imageMso='Copy' label='Copy feedback csv string' onAction='OnCopyFeedbackString' size='large'/>
+              <button id='CopyGradeString' imageMso='Copy' label='Copiar notas em formato csv' onAction='OnCopyGradeString' size='large'/>
+              <button id='CopyFeedbackString' imageMso='Copy' label='Copiar sínteses em fomrato csv' onAction='OnCopyFeedbackString' size='large'/>
             </group>
           </tab>
         </tabs>
@@ -117,7 +117,7 @@ namespace AddinGrades
                 else
                 {
                     FeedbackTable.LockCollumnsAndHeaders(sheet);
-                    sheet.Protect();
+                    sheet.Protect(AllowFormattingColumns: true, AllowFormattingCells: true, AllowFormattingRows: true);
                 }
             }
             else
@@ -130,7 +130,7 @@ namespace AddinGrades
                 else
                 {
                     GradeTable.LockCollumnsAndHeaders(sheet);
-                    sheet.Protect();
+                    sheet.Protect(AllowFormattingColumns: true, AllowFormattingCells: true, AllowFormattingRows: true);
                 }
             }
 

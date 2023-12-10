@@ -11,7 +11,7 @@ namespace AddinGrades
         public readonly string SheetID; 
         public static class CollumnName
         {
-            public const string Student = "Student";
+            public const string Student = "Aluno";
 
         }
 
@@ -26,7 +26,7 @@ namespace AddinGrades
             Worksheet worksheet = app.ActiveSheet as Worksheet;
             Range currentCell = worksheet.get_Range("A2"); 
             WorkbookData data = Utils.GetExcelApplication().LoadWorkbookData(); 
-            worksheet.Name = "Sínteses"; 
+            worksheet.Name = GradeTable.CollumnName.Feedback;
 
             foreach (string studentName in students)
             {
@@ -41,7 +41,7 @@ namespace AddinGrades
             {
                 currentCell = currentCell.Offset[0, 1];
                 currentCell.ColumnWidth = 10;
-                currentCell.Value = "Final Grade";
+                currentCell.Value = GradeTable.CollumnName.FinalGrade;
 
                 Range cellIteratorForFinalGrade = currentCell;
 

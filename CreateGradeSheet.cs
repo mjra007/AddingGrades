@@ -52,7 +52,7 @@ namespace AddinGrades
                     gradeSheetID ??= worksheet.CreateCustomID();
                     //create gradesheet in workbookdata
                     GradeSheet gradeSheet = new();
-                    gradeSheet.CourseworkWeightedTables.Add(new CourseworkWeightedTable("Default", gradeSheet.Coursework,
+                    gradeSheet.CourseworkWeightedTables.Add(new CourseworkWeightedTable("Padrão", gradeSheet.Coursework,
                         Enumerable.Repeat(0d, gradeSheet.Coursework.Count).ToArray()));
                     data.GradeSheets.Add(gradeSheetID, gradeSheet);
                     data.Save();
@@ -70,10 +70,10 @@ namespace AddinGrades
 
 
             Worksheet feedback = Utils.GetFeedbackSheet();
-            if (feedback!=null)
+            if (feedback != null)
             {
                 FeedbackTable.LockCollumnsAndHeaders(feedback);
-                feedback.Protect();
+                feedback.Protect(AllowFormattingColumns: true, AllowFormattingCells: true, AllowFormattingRows: true);
             }
             //For some reason chrome driver makes it so you have to bind this event again 
             Utils.GetExcelApplication().ActiveWorkbook.SheetChange += Program.OnSheetChange;

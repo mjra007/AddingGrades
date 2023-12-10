@@ -67,7 +67,7 @@
             groupBox1.Size = new Size(385, 269);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
-            groupBox1.Text = "Class details";
+            groupBox1.Text = "Detalhes";
             // 
             // groupBox7
             // 
@@ -79,7 +79,7 @@
             groupBox7.Size = new Size(364, 100);
             groupBox7.TabIndex = 6;
             groupBox7.TabStop = false;
-            groupBox7.Text = "Cache settings";
+            groupBox7.Text = "Definições de cache";
             // 
             // cacheData
             // 
@@ -95,7 +95,7 @@
             button1.Name = "button1";
             button1.Size = new Size(129, 72);
             button1.TabIndex = 1;
-            button1.Text = "Update cache";
+            button1.Text = "Atualizar cache";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
@@ -104,9 +104,9 @@
             label1.AutoSize = true;
             label1.Location = new Point(12, 28);
             label1.Name = "label1";
-            label1.Size = new Size(78, 15);
+            label1.Size = new Size(66, 15);
             label1.TabIndex = 0;
-            label1.Text = "Last updated:";
+            label1.Text = "Atualizado:";
             // 
             // groupClassPicker
             // 
@@ -120,7 +120,7 @@
             groupClassPicker.Size = new Size(367, 135);
             groupClassPicker.TabIndex = 5;
             groupClassPicker.TabStop = false;
-            groupClassPicker.Text = "Get names of students";
+            groupClassPicker.Text = "Exportar nome de alunos";
             // 
             // groupBox5
             // 
@@ -130,7 +130,7 @@
             groupBox5.Size = new Size(149, 47);
             groupBox5.TabIndex = 2;
             groupBox5.TabStop = false;
-            groupBox5.Text = "Number of sheets";
+            groupBox5.Text = "Numero de folhas";
             // 
             // numberOfSheetsComboBox
             // 
@@ -156,7 +156,7 @@
             createGradeSheetButton.Name = "createGradeSheetButton";
             createGradeSheetButton.Size = new Size(194, 47);
             createGradeSheetButton.TabIndex = 1;
-            createGradeSheetButton.Text = "Create gradesheet";
+            createGradeSheetButton.Text = "Criar folha de notas";
             createGradeSheetButton.UseVisualStyleBackColor = true;
             createGradeSheetButton.Click += createGradeSheetButton_Click;
             // 
@@ -165,9 +165,9 @@
             classesLbl.AutoSize = true;
             classesLbl.Location = new Point(12, 25);
             classesLbl.Name = "classesLbl";
-            classesLbl.Size = new Size(69, 15);
+            classesLbl.Size = new Size(122, 15);
             classesLbl.TabIndex = 2;
-            classesLbl.Text = "Select class:";
+            classesLbl.Text = "Seleciona uma turma:";
             // 
             // groupBox6
             // 

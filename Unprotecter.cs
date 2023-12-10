@@ -18,7 +18,7 @@ namespace AddinGrades
 
         public void Dispose()
         {
-            if (currentStatus) sheet.Protect();
+            if (currentStatus) sheet.Protect(AllowFormattingColumns: true, AllowFormattingCells: true, AllowFormattingRows: true);
         }
     }
 }

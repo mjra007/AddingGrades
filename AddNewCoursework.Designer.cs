@@ -49,7 +49,7 @@
             groupBox1.Size = new Size(331, 125);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
-            groupBox1.Text = "Add new coursework";
+            groupBox1.Text = "Adicionar um novo momento de avaliação";
             // 
             // button1
             // 
@@ -61,7 +61,7 @@
             button1.Name = "button1";
             button1.Size = new Size(307, 33);
             button1.TabIndex = 2;
-            button1.Text = "Add";
+            button1.Text = "Criar";
             button1.TextImageRelation = TextImageRelation.ImageBeforeText;
             button1.UseVisualStyleBackColor = false;
             button1.Click += button1_Click;
@@ -74,7 +74,7 @@
             groupBox3.Size = new Size(124, 57);
             groupBox3.TabIndex = 1;
             groupBox3.TabStop = false;
-            groupBox3.Text = "Weight %";
+            groupBox3.Text = "Peso %";
             // 
             // courseworkWeightTxt
             // 
@@ -91,7 +91,7 @@
             groupBox2.Size = new Size(189, 57);
             groupBox2.TabIndex = 0;
             groupBox2.TabStop = false;
-            groupBox2.Text = "Coursework Name";
+            groupBox2.Text = "Nome";
             // 
             // courseworkNameTxt
             // 

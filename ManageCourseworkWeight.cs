@@ -16,6 +16,11 @@ namespace AddinGrades
             data.GradeSheets[GradeSheetID].CourseworkWeightedTables.ForEach(s => tablesList.Items.Add(s.name));
             CourseworkDeleteEvent += new EventHandler<string>(OnCourseworkDelete);
             CourseworkAddEvent += new EventHandler<(string, double)>(OnCourseworkAdd);
+            if(data.GradeSheets.Count > 0)
+            {
+                tablesList.SelectedIndex = 0;
+
+            }
         }
 
         private void CreateButton_Click(object sender, EventArgs e)
@@ -50,7 +55,7 @@ namespace AddinGrades
                 {
                     flowLayoutPanel1.Controls.Add(
                         new CourseworkWeightControl(keyvaluepair.Key.Name, keyvaluepair.Value * 100, (string)tablesList.SelectedItem, CourseworkDeleteEvent));
-                }
+                } 
                 flowLayoutPanel1.Controls.Add(new AddNewCoursework(GradeSheetID, CourseworkAddEvent));
             }
         }
@@ -68,7 +73,7 @@ namespace AddinGrades
             table.InsertKnowledgeFunctionForRows(Utils.GetWorksheetById(GradeSheetID));
             table.LockCollumnsAndHeaders();
             RefreshListOfCoursework();
-            table.ApplyStyles(); 
+            table.ApplyStyles();
             //For some reason chrome driver makes it so you have to bind this event again 
             Utils.GetExcelApplication().ActiveWorkbook.SheetChange += Program.OnSheetChange;
         }
@@ -146,6 +151,7 @@ namespace AddinGrades
             data.Save();
             GradeTable table = new(GradeSheetID);
             table.InsertKnowledgeFunctionForRows(Utils.GetWorksheetById(GradeSheetID));
+            Utils.GetExcelApplication().CalculateFull();
         }
 
         private void OnTimerTick(object sender, EventArgs e)

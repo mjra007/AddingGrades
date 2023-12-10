@@ -64,7 +64,7 @@
             saveWeightChangesButton.Name = "saveWeightChangesButton";
             saveWeightChangesButton.Size = new Size(372, 23);
             saveWeightChangesButton.TabIndex = 1;
-            saveWeightChangesButton.Text = " Save Weight Changes";
+            saveWeightChangesButton.Text = "Salvar pesos";
             saveWeightChangesButton.UseVisualStyleBackColor = true;
             saveWeightChangesButton.Click += saveWeightChangesButton_Click;
             // 
@@ -76,7 +76,7 @@
             groupBox2.Size = new Size(375, 421);
             groupBox2.TabIndex = 2;
             groupBox2.TabStop = false;
-            groupBox2.Text = "Weights";
+            groupBox2.Text = "Pesos";
             // 
             // flowLayoutPanel1
             // 
@@ -97,7 +97,7 @@
             tablesGroup.Size = new Size(274, 392);
             tablesGroup.TabIndex = 1;
             tablesGroup.TabStop = false;
-            tablesGroup.Text = "Select Table";
+            tablesGroup.Text = "Seleciona uma tabela";
             tablesGroup.Enter += tablesGroup_Enter;
             // 
             // tablesList
@@ -118,7 +118,7 @@
             tableGroup.Size = new Size(274, 53);
             tableGroup.TabIndex = 0;
             tableGroup.TabStop = false;
-            tableGroup.Text = "Create new table";
+            tableGroup.Text = "Criar nova tabela de pesos";
             // 
             // CreateButton
             // 
@@ -126,7 +126,7 @@
             CreateButton.Name = "CreateButton";
             CreateButton.Size = new Size(75, 23);
             CreateButton.TabIndex = 1;
-            CreateButton.Text = "Create";
+            CreateButton.Text = "Criar";
             CreateButton.UseVisualStyleBackColor = true;
             CreateButton.Click += CreateButton_Click;
             // 
@@ -151,7 +151,7 @@
             Controls.Add(groupBox1);
             Name = "ManageCourseworkWeight";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "ManageCourseworkWeight";
+            Text = "Editar momentos de avaliação";
             groupBox1.ResumeLayout(false);
             groupBox2.ResumeLayout(false);
             tablesGroup.ResumeLayout(false);

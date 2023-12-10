@@ -38,12 +38,12 @@ return finalGrade.toFixed(1);
         public static class CollumnName
         {
             public const string Student = "Aluno";
-            public const string Knowledge = "Knowledge";
+            public const string Knowledge = "Conhecimentos";
             public const string Atitudes = "Atitudes";
-            public const string CourseworkWeigthtedTable = "Weighted Table";
-            public const string FinalGrade = "Final Grade";
+            public const string CourseworkWeigthtedTable = "Tabela de pesos";
+            public const string FinalGrade = "Nota Final";
             public const string Feedback = "Sínteses";
-            public const string Observations = "Observations";
+            public const string Observations = "Observações";
 
         }
 
@@ -84,9 +84,9 @@ return finalGrade.toFixed(1);
                     string finalGradeColumn = Utils.GetExcelColumnName(GetLastHeaderCollumnWithValue() + 1);
                     string feedbackColumn = Utils.GetExcelColumnName(GetLastHeaderCollumnWithValue() + 2);
                     Range finalGradeCell = feedbackWorksheet.get_Range($"{finalGradeColumn}1");
-                    finalGradeCell.Value = "Final Grade";
+                    finalGradeCell.Value = CollumnName.FinalGrade;
                     Range feedbackCell = feedbackWorksheet.get_Range($"{feedbackColumn}1");
-                    feedbackCell.Value = $"=GetSheetName(\"{GradeSheetID}\")";
+                    feedbackCell.Value = $"=GetSheetName(\"{GradeSheetID}\")"; 
                     feedbackCell.ColumnWidth = 25;
 
                     foreach (string name in studentNames)
@@ -111,6 +111,7 @@ return finalGrade.toFixed(1);
             string lastColumn = Utils.GetExcelColumnName(DefaultColumns.Count); 
 
             worksheet.get_Range("A2", $"{lastColumn}2").Cells.Font.Size = 13;
+            worksheet.get_Range("A2", $"{lastColumn}2").Cells.Font.FontStyle = "Bold";
             worksheet.get_Range("A2", $"{lastColumn}2").Interior.Color = ColorTranslator.ToOle(Color.LightGoldenrodYellow);
 
 
@@ -131,7 +132,7 @@ return finalGrade.toFixed(1);
             }
             LockCollumnsAndHeaders();
             ApplyStyles();
-            worksheet.Protect();
+            worksheet.Protect(AllowFormattingColumns: true, AllowFormattingCells: true, AllowFormattingRows: true);
         }
 
         public void LockCollumnsAndHeaders()
@@ -155,7 +156,6 @@ return finalGrade.toFixed(1);
                 worksheet.get_Range($"{feedbackColumnName}3", $"{feedbackColumnName}100").Locked = true;
                 worksheet.get_Range($"{knowledgeCollumnName}3", $"{knowledgeCollumnName}100").Locked = true;
                 worksheet.get_Range($"{finalCollumnName}3", $"{finalCollumnName}100").Locked = true;
-
             } 
         }
 
@@ -169,43 +169,40 @@ return finalGrade.toFixed(1);
             Application app = Utils.GetExcelApplication();
             WorkbookData data = Utils.LoadWorkbookData(app);
             var sheetID = Utils.GetCustomID(worksheet);
-            bool protectAtTheEnd = false;
-            if (worksheet.ProtectContents)
+            using (Unprotecter protecter = new(worksheet))
             {
-                protectAtTheEnd = true;
-                worksheet.Unprotect();
-            }
-            if (string.IsNullOrEmpty(sheetID) is false)
-            {
-                Range range;
-                //Style the coursework collumns
-                for (int i = 0; i < data.GradeSheets[sheetID].Coursework.Count; i++)
+                if (string.IsNullOrEmpty(sheetID) is false)
                 {
-                    Coursework? item = data.GradeSheets[sheetID].Coursework[i];
-                    string courseworkColumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(worksheet, item.Name)+1);
-                    range = worksheet.get_Range($"{courseworkColumnName}3", $"{courseworkColumnName}100");
+                    Range range;
+                    //Style the coursework collumns
+                    for (int i = 0; i < data.GradeSheets[sheetID].Coursework.Count; i++)
+                    {
+                        Coursework? item = data.GradeSheets[sheetID].Coursework[i];
+                        string courseworkColumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(worksheet, item.Name) + 1);
+                        range = worksheet.get_Range($"{courseworkColumnName}3", $"{courseworkColumnName}100");
+                        range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
+                    }
+
+                    //Style the final grade, knowledge and feedback
+                    string feedbackColumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(worksheet, CollumnName.Feedback) + 1);
+                    string knowledgeCollumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(worksheet, CollumnName.Knowledge) + 1);
+                    string finalCollumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(worksheet, CollumnName.FinalGrade) + 1);
+                    string atitudesCollumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(worksheet, CollumnName.Atitudes) + 1);
+                    string weightedTableCollumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(worksheet, CollumnName.CourseworkWeigthtedTable) + 1);
+                    range = worksheet.get_Range($"{feedbackColumnName}3", $"{feedbackColumnName}100");
+                    range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
+                    range = worksheet.get_Range($"{knowledgeCollumnName}3", $"{knowledgeCollumnName}100");
+                    range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
+                    range = worksheet.get_Range($"{finalCollumnName}3", $"{finalCollumnName}100");
+                    range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
+                    range.Interior.Color = ColorTranslator.ToOle(Color.LightGoldenrodYellow); 
+                    range.Cells.Font.FontStyle = "Bold";
+                    range = worksheet.get_Range($"{atitudesCollumnName}3", $"{atitudesCollumnName}100");
+                    range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
+                    range = worksheet.get_Range($"{weightedTableCollumnName}3", $"{weightedTableCollumnName}100");
                     range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
                 }
-
-                //Style the final grade, knowledge and feedback
-                string feedbackColumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(worksheet, CollumnName.Feedback) + 1);
-                string knowledgeCollumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(worksheet, CollumnName.Knowledge) + 1);
-                string finalCollumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(worksheet, CollumnName.FinalGrade) + 1);
-                string atitudesCollumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(worksheet, CollumnName.Atitudes) + 1); 
-                string weightedTableCollumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(worksheet, CollumnName.CourseworkWeigthtedTable) + 1);
-                range = worksheet.get_Range($"{feedbackColumnName}3", $"{feedbackColumnName}100");
-                range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
-                range = worksheet.get_Range($"{knowledgeCollumnName}3", $"{knowledgeCollumnName}100");
-                range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
-                range = worksheet.get_Range($"{finalCollumnName}3", $"{finalCollumnName}100");
-                range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
-                range = worksheet.get_Range($"{atitudesCollumnName}3", $"{atitudesCollumnName}100");
-                range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
-                range = worksheet.get_Range($"{weightedTableCollumnName}3", $"{weightedTableCollumnName}100");
-                range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
             }
-            if (protectAtTheEnd) 
-                worksheet.Protect(); 
         }
 
         [ExcelFunction()]
@@ -349,9 +346,10 @@ return finalGrade.toFixed(1);
             string knowledgeCollumnName = Utils.GetExcelColumnName(GetCollumnByNameIndex(CollumnName.Knowledge) + 1);
             string atitudesCollumnName = Utils.GetExcelColumnName(GetCollumnByNameIndex(CollumnName.Atitudes) + 1);
             Worksheet sheet = Utils.GetWorksheetById(GradeSheetID);
-            sheet.Unprotect();
-            sheet.get_Range($"{finalGradeCollumnName}{row}").Formula=$"=CalculateFinalGrade({knowledgeCollumnName}{row}, {atitudesCollumnName}{row})";
-            sheet.Protect();
+            using (Unprotecter protecter = new(sheet))
+            {
+                sheet.get_Range($"{finalGradeCollumnName}{row}").Formula = $"=CalculateFinalGrade({knowledgeCollumnName}{row}, {atitudesCollumnName}{row})";
+            }
         }
 
         public string GetFinalGradeForRow(int row)
@@ -367,12 +365,13 @@ return finalGrade.toFixed(1);
             int finalGradeCollumnNumber = GetCollumnByNameIndex(CollumnName.FinalGrade) + 1;
             ExcelReference range = new(3, GradeTable.FindLastStudentRow(sheet), finalGradeCollumnNumber, finalGradeCollumnNumber);
             var cells = Utils.GetWorksheetById(GradeSheetID).Cells as Range;
-            cells.Worksheet.Unprotect();
-            for (int i = range.RowFirst; i < range.RowLast; i++)
+            using (Unprotecter protecter = new(cells.Worksheet))
             {
-                (cells[i, range.ColumnFirst] as Range).Formula = GetFinalGradeForRow(i);
+                for (int i = range.RowFirst; i < range.RowLast; i++)
+                {
+                    (cells[i, range.ColumnFirst] as Range).Formula = GetFinalGradeForRow(i);
+                }
             }
-            cells.Worksheet.Protect();
         }
 
         public void InsertKnowledgeFunction(int row)
@@ -383,9 +382,10 @@ return finalGrade.toFixed(1);
             string firstCourseworkCollumnName = Utils.GetExcelColumnName(GetCollumnByNameIndex(CollumnName.Student) + 2);
             if (firstCourseworkCollumnName == knowledgeCollumnName) return;
             Worksheet sheet = Utils.GetWorksheetById(GradeSheetID);
-            sheet.Unprotect();
-            sheet.get_Range($"{knowledgeCollumnName}{row}").Formula = $"=CalculateKnowledge({firstCourseworkCollumnName}{row}:{lastCourseworkCollumnName}{row},{firstCourseworkCollumnName}2:{lastCourseworkCollumnName}2, {courseworkWeightedTableName}{row})";
-            sheet.Protect();
+            using (Unprotecter protecter = new(sheet))
+            {
+                sheet.get_Range($"{knowledgeCollumnName}{row}").Formula = $"=CalculateKnowledge({firstCourseworkCollumnName}{row}:{lastCourseworkCollumnName}{row},{firstCourseworkCollumnName}2:{lastCourseworkCollumnName}2, {courseworkWeightedTableName}{row})";
+            }
         }
 
         public string GetKnowledgeFunctionForRow(int row)
@@ -402,12 +402,13 @@ return finalGrade.toFixed(1);
             int knowledgeCollumnNumber = GetCollumnByNameIndex(CollumnName.Knowledge) + 1;
             ExcelReference range = new(3, GradeTable.FindLastStudentRow(sheet), knowledgeCollumnNumber, knowledgeCollumnNumber);
             var cells = Utils.GetWorksheetById(GradeSheetID).Cells as Range;
-            cells.Worksheet.Unprotect();
-            for (int i = range.RowFirst; i < range.RowLast; i++)
+            using (Unprotecter protecter = new(cells.Worksheet))
             {
-                (cells[i, range.ColumnFirst] as Range).Formula = GetKnowledgeFunctionForRow(i);
-            }
-            cells.Worksheet.Protect();
+                for (int i = range.RowFirst; i < range.RowLast; i++)
+                {
+                    (cells[i, range.ColumnFirst] as Range).Formula = GetKnowledgeFunctionForRow(i);
+                }
+            };
         }
 
         public void InsertFeedback(int row)
@@ -417,29 +418,31 @@ return finalGrade.toFixed(1);
             {
                 string feedbackCollumnName = Utils.GetExcelColumnName(feedbackCollumnNameIndex.Value+ 1);
                 Worksheet sheet = Utils.GetWorksheetById(GradeSheetID);
-                sheet.Unprotect();
-                sheet.get_Range($"{feedbackCollumnName}{row}").Formula = $"=GrabFeedbackFor(A{row})";
-                sheet.Protect(); 
+                using (Unprotecter protecter = new(sheet))
+                {
+                    sheet.get_Range($"{feedbackCollumnName}{row}").Formula = $"=GrabFeedbackFor(A{row})";
+                }
             }
         }
         public void InsertDropdownForWeightedTable(int row)
         {
             Worksheet sheet = Utils.GetWorksheetById(GradeSheetID);
             string collumnName = Utils.GetExcelColumnName(GetCollumnByNameIndex(CollumnName.CourseworkWeigthtedTable) + 1);
-            sheet.Unprotect();
-            Range cell = sheet.get_Range(Cell1: $"{collumnName}{row}");
-            WorkbookData data = Utils.GetExcelApplication().LoadWorkbookData();
-            cell.Validation.Delete();
-            cell.Validation.Add(
-               XlDVType.xlValidateList,
-               XlDVAlertStyle.xlValidAlertInformation,
-               XlFormatConditionOperator.xlBetween,
-               string.Join(',', data.GradeSheets[GradeSheetID].CourseworkWeightedTables.Select(s => s.name)),
-               Type.Missing);
-            cell.Validation.IgnoreBlank = true;
-            cell.Validation.InCellDropdown = true;
-            cell.Value2 = data.GradeSheets[GradeSheetID].CourseworkWeightedTables.First().name;
-            sheet.Protect();
+            using (Unprotecter protecter = new(sheet))
+            {
+                Range cell = sheet.get_Range(Cell1: $"{collumnName}{row}");
+                WorkbookData data = Utils.GetExcelApplication().LoadWorkbookData();
+                cell.Validation.Delete();
+                cell.Validation.Add(
+                   XlDVType.xlValidateList,
+                   XlDVAlertStyle.xlValidAlertInformation,
+                   XlFormatConditionOperator.xlBetween,
+                   string.Join(',', data.GradeSheets[GradeSheetID].CourseworkWeightedTables.Select(s => s.name)),
+                   Type.Missing);
+                cell.Validation.IgnoreBlank = true;
+                cell.Validation.InCellDropdown = true;
+                cell.Value2 = data.GradeSheets[GradeSheetID].CourseworkWeightedTables.First().name;
+            }
         }
 
 
@@ -486,52 +489,55 @@ return finalGrade.toFixed(1);
             Worksheet sheet = Utils.GetWorksheetById(GradeSheetID);
             int weightedTableCollumn = GetCollumnByNameIndex(CollumnName.CourseworkWeigthtedTable) + 1;
             string collumnName = Utils.GetExcelColumnName(weightedTableCollumn);
-            sheet.Unprotect();
-            Range cell = sheet.get_Range($"{collumnName}3");
-            WorkbookData data = Utils.GetExcelApplication().LoadWorkbookData();
-            for (int i = 3; i < FindLastStudentRow(sheet); i++)
+            using (Unprotecter protecter = new(sheet))
             {
-                cell.Validation.Delete();
-                cell.Validation.Add(
-                   XlDVType.xlValidateList,
-                   XlDVAlertStyle.xlValidAlertInformation,
-                   XlFormatConditionOperator.xlBetween,
-                   string.Join(',', data.GradeSheets[GradeSheetID].CourseworkWeightedTables.Select(s => s.name)),
-                   Type.Missing);
-                cell.Validation.IgnoreBlank = true;
-                cell.Validation.InCellDropdown = true;
-                cell.Value2 = data.GradeSheets[GradeSheetID].CourseworkWeightedTables.First().name;
-                cell = cell.Offset[1, 0];
+                Range cell = sheet.get_Range($"{collumnName}3");
+                WorkbookData data = Utils.GetExcelApplication().LoadWorkbookData();
+                for (int i = 3; i < FindLastStudentRow(sheet); i++)
+                {
+                    cell.Validation.Delete();
+                    cell.Validation.Add(
+                       XlDVType.xlValidateList,
+                       XlDVAlertStyle.xlValidAlertInformation,
+                       XlFormatConditionOperator.xlBetween,
+                       string.Join(',', data.GradeSheets[GradeSheetID].CourseworkWeightedTables.Select(s => s.name)),
+                       Type.Missing);
+                    cell.Validation.IgnoreBlank = true;
+                    cell.Validation.InCellDropdown = true;
+                    cell.Value2 = data.GradeSheets[GradeSheetID].CourseworkWeightedTables.First().name;
+                    cell = cell.Offset[1, 0];
+                }
             }
-            sheet.Protect();
         }
 
         public void InsertNewCoursework(params Coursework[] courseworks)
         {
             Worksheet sheet = Utils.GetWorksheetById(GradeSheetID);
-            sheet.Unprotect();
-            int insertCollumn = GetLastCourseworkCollumn() + 1;
-
-            foreach (Coursework coursework in courseworks)
+            using (Unprotecter protecter = new(sheet))
             {
-                Range collumnNameCell = sheet.Range[$"{Utils.GetExcelColumnName(insertCollumn)}2"];
-                collumnNameCell.EntireColumn.Insert(XlInsertShiftDirection.xlShiftToRight, XlInsertFormatOrigin.xlFormatFromRightOrBelow);
-                //reference needs to be updated so it gets the new inserted cell instead of the moved one
-                collumnNameCell = sheet.Range[$"{Utils.GetExcelColumnName(insertCollumn)}2"];
-                collumnNameCell.Value2 = coursework.Name;
-                insertCollumn++;
+                int insertCollumn = GetLastCourseworkCollumn() + 1;
+
+                foreach (Coursework coursework in courseworks)
+                {
+                    Range collumnNameCell = sheet.Range[$"{Utils.GetExcelColumnName(insertCollumn)}2"];
+                    collumnNameCell.EntireColumn.Insert(XlInsertShiftDirection.xlShiftToRight, XlInsertFormatOrigin.xlFormatFromRightOrBelow);
+                    //reference needs to be updated so it gets the new inserted cell instead of the moved one
+                    collumnNameCell = sheet.Range[$"{Utils.GetExcelColumnName(insertCollumn)}2"];
+                    collumnNameCell.Value2 = coursework.Name;
+                    insertCollumn++;
+                }
+                sheet.Columns.AutoFit();
             }
-            sheet.Columns.AutoFit();
-            sheet.Protect();
         }
 
         public void DeleteCourseworkCollumn(string name)
         {
             Worksheet worksheet = Utils.GetWorksheetById(GradeSheetID);
-            worksheet.Unprotect(); 
-            string collumnLetter = Utils.GetExcelColumnName(GetCourseworkIndex(name) + 1);
-            worksheet.Columns[collumnLetter].Delete(); 
-            worksheet.Protect();
+            using (Unprotecter protecter = new(worksheet))
+            {
+                string collumnLetter = Utils.GetExcelColumnName(GetCourseworkIndex(name) + 1);
+                worksheet.Columns[collumnLetter].Delete();
+            }
         }
 
         public int GetLastCourseworkCollumn()
@@ -651,6 +657,21 @@ return finalGrade.toFixed(1);
                 currentCell = currentCell.Offset[1, 0];
             }
             return sb.ToString();
+        }
+
+        public void SetHeaderCourseworks()
+        {
+            Worksheet? sheet = Utils.GetWorksheetById(GradeSheetID);
+            if(sheet != null )
+            {
+                using(Unprotecter unprotecter = new(sheet))
+                {
+                    WorkbookData data = Utils.LoadWorkbookData(Utils.GetExcelApplication());
+                    
+
+
+                }
+            }
         }
 
         //public void RecalculateGrades()
