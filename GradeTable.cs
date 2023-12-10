@@ -366,7 +366,7 @@ return finalGrade.toFixed(1);
             {
                 if (sheet.Name.Equals(sheetNameString) && string.IsNullOrEmpty(studentNameString) == false)
                 {
-                    int? rowIndex = Utils.GetRowByNameIndex(sheet, studentNameString, "A");
+                    int? rowIndex = Utils.GetRowByNameIndex(sheet, studentNameString, "B");
                     if (rowIndex.HasValue)
                     {
                         string finalGradeCollumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(sheet, CollumnName.FinalGrade) + 1);
