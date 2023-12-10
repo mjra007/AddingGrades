@@ -87,7 +87,7 @@ namespace AddinGrades
                 Program.LoggerPanel.WriteLineToPanel("This is not a gradesheet");
                 return;
             }
-            if (Utils.IsFeedback() is false)
+            if (Utils.IsFeedback())
             {
                 Program.LoggerPanel.WriteLineToPanel("This is not a gradesheet");
                 return;
