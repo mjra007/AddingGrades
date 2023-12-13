@@ -321,9 +321,9 @@ namespace AddinGrades
             return counter;
         }
 
-        public static int? GetRowByNameIndex(string sheetID, string studentName,string columnName, int limit = 50)
+        public static int? GetRowByNameIndex(string studentName,string columnName, int limit = 50)
         {
-            Worksheet worksheet = Utils.GetWorksheetById(sheetID);
+            Worksheet worksheet = Utils.GetFeedbackSheet();
             if (worksheet is null) return null;
             Range currentCell = worksheet.get_Range($"{columnName}1");
             int counter = 0;

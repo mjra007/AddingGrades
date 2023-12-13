@@ -335,7 +335,7 @@ return finalGrade.toFixed(1);
             if (Utils.GetExcelApplication() is null || Utils.GetExcelApplication().LoadWorkbookData() is null) return string.Empty;
             cacheFeedbackSheetID ??= Utils.GetExcelApplication().LoadWorkbookData().FeedbackSheetID; 
 
-            int? rowIndex = Utils.GetRowByNameIndex(cacheFeedbackSheetID, studentNameString, "B");
+            int? rowIndex = Utils.GetRowByNameIndex( studentNameString, "B");
             if (rowIndex == null) return string.Empty;
 
             int? indexOfCourseworkFeedbakcColumn = Utils.GetCollumnByNameIndex(cacheFeedbackSheetID, sheetName, "A1");
