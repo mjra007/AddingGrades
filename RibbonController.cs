@@ -125,10 +125,13 @@ namespace AddinGrades
                 var sheet = Utils.GetWorksheetById(Utils.GetCurrentSheetID());
                 if (sheet.ProtectContents)
                 {
+                    Program.LoggerPanel.WriteLineToPanel("Gradesheet has been unprotected.");
                     sheet.Unprotect();
                 }
                 else
                 {
+
+                    Program.LoggerPanel.WriteLineToPanel("Gradesheet has been protected.");
                     GradeTable.LockCollumnsAndHeaders(sheet);
                     sheet.Protect(AllowFormattingColumns: true, AllowFormattingCells: true, AllowFormattingRows: true);
                 }

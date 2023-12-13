@@ -16,11 +16,8 @@ namespace AddinGrades
             data.GradeSheets[GradeSheetID].CourseworkWeightedTables.ForEach(s => tablesList.Items.Add(s.name));
             CourseworkDeleteEvent += new EventHandler<string>(OnCourseworkDelete);
             CourseworkAddEvent += new EventHandler<(string, double)>(OnCourseworkAdd);
-            if(data.GradeSheets.Count > 0)
-            {
-                tablesList.SelectedIndex = 0;
-
-            }
+            if(tablesList.Items.Count >0)
+             tablesList.SelectedIndex= 0;
         }
 
         private void CreateButton_Click(object sender, EventArgs e)

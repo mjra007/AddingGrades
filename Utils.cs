@@ -10,6 +10,9 @@ using System.Collections.ObjectModel;
 using Application = Microsoft.Office.Interop.Excel.Application; 
 using Range = Microsoft.Office.Interop.Excel.Range;
 using System.Linq;
+using System.Drawing.Imaging;
+using System.Diagnostics;
+using System.Buffers.Text;
 
 namespace AddinGrades
 {
@@ -207,10 +210,19 @@ namespace AddinGrades
                 var windowClasss = driver.WindowHandles.Last();
                 driver.SwitchTo().Window(windowClasss); 
                 driver.FindElement(By.Id("__tab_ctl00_editContentPlaceHolder_Tabs_tp3")).Click();
-                var studentsFiltered = driver.FindElements(By.CssSelector("div[class='divImgStudent']")).Select(s => s.FindElements(By.TagName("a")))
+                var studentsFiltered = driver.FindElements(By.CssSelector("div[class='divImgStudent']"))
+                    .Select(s => s.FindElements(By.TagName("a")))
                     .Where(s => s.Where(d => FilteredTags.Contains(d.GetAttribute("title"))).All(s => s.GetAttribute("style").Equals("display: none;") is true))
                     .Select(s=>s.First(d=>d.GetAttribute("id").Equals("studentImage")).GetAttribute("title")).ToList();
-                studentNames.AddRange(studentsFiltered); 
+                var studentsImages = driver.FindElements(By.CssSelector("div[class='divImgStudent']"))
+                 .Select(s => s.FindElements(By.TagName("a")))
+                 .Where(s => s.Where(d => FilteredTags.Contains(d.GetAttribute("title"))).All(s => s.GetAttribute("style").Equals("display: none;") is true))
+                 .Select(s => s.First(d => d.GetAttribute("id").Equals("studentImage")).FindElement(By.TagName("img")).GetAttribute("id")).ToList();
+                studentNames.AddRange(studentsFiltered);
+                for (int i = 0; i < studentNames.Count; i++)
+                {
+                    saveImage(driver, studentsImages[i], studentNames[i], className); 
+                }
                 driver.Close();
                 driver.SwitchTo().Window(firstWindow);
             }
@@ -223,6 +235,40 @@ namespace AddinGrades
             }
             return studentNames;
         }
+
+        public static void saveImage(ChromeDriver driver, string imageId, string studentName, string className)
+        {
+            Program.LoggerPanel.WriteLineToPanel($"{className}-{studentName}.png");
+            if (Directory.Exists("StudentImages") is false) Directory.CreateDirectory("StudentImages");
+            var base64string = driver.ExecuteScript($@"
+    var c = document.createElement('canvas');
+    var ctx = c.getContext('2d');
+    var img = document.getElementById('{imageId}');
+    c.height=img.naturalHeight;
+    c.width=img.naturalWidth;
+    ctx.drawImage(img, 0, 0,img.naturalWidth, img.naturalHeight);
+    var base64String = c.toDataURL();
+    return base64String;
+    ") as string;
+
+            if (base64string is not null)
+            {
+                var base64 = base64string.Split(',');
+                if (base64.Count() > 1 && string.IsNullOrEmpty(base64.Last()) is false)
+                {
+                    using (var stream = new MemoryStream(Convert.FromBase64String(base64.Last())))
+                    {
+                        using (var bitmap = new Bitmap(stream))
+                        {
+                            var filepath = Path.Combine(Program.ExcelAddinPathDir, "StudentImages", $"{className}-{studentName}.png");
+                            bitmap.Save(filepath, ImageFormat.Png);
+                        }
+                    }
+                } 
+            }
+
+        }
+
         public static void InsertInputById(this WebDriver driver, string id, string value) => driver.FindElement(By.Id(id)).SendKeys(value);
 
         public static void OpenClass(this WebDriver driver, string className)
@@ -311,6 +357,27 @@ namespace AddinGrades
                 counter++;
             };
             return found == false ? counter : null;
+        }
+
+        public static IEnumerable<string> GetStudentNames(Worksheet sheet)
+        {
+            Range studentCollum = sheet.get_Range($"{Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(sheet, GradeTable.CollumnName.Student) + 1)}3");
+            while(string.IsNullOrEmpty(studentCollum.Value2) is false)
+            {
+                yield return studentCollum.Value2;
+                studentCollum = studentCollum.Offset[1, 0];
+            }
+        }
+
+        public static IEnumerable<string> GetStudentNamesFromFeedback(Worksheet sheet)
+        {
+            string collumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(sheet, GradeTable.CollumnName.Student, "B1") + 2);
+            Range studentCollum = sheet.get_Range($"{collumnName}2");
+            while (string.IsNullOrEmpty(studentCollum.Value2) is false)
+            {
+                yield return studentCollum.Value2;
+                studentCollum = studentCollum.Offset[1, 0];
+            }
         }
     }
 }

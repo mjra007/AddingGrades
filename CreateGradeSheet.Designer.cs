@@ -71,12 +71,13 @@
             // 
             // groupBox7
             // 
+            groupBox7.AccessibleRole = AccessibleRole.None;
             groupBox7.Controls.Add(cacheData);
             groupBox7.Controls.Add(button1);
             groupBox7.Controls.Add(label1);
             groupBox7.Location = new Point(9, 163);
             groupBox7.Name = "groupBox7";
-            groupBox7.Size = new Size(364, 100);
+            groupBox7.Size = new Size(367, 100);
             groupBox7.TabIndex = 6;
             groupBox7.TabStop = false;
             groupBox7.Text = "Definições de cache";
@@ -91,9 +92,9 @@
             // 
             // button1
             // 
-            button1.Location = new Point(223, 19);
+            button1.Location = new Point(6, 70);
             button1.Name = "button1";
-            button1.Size = new Size(129, 72);
+            button1.Size = new Size(129, 24);
             button1.TabIndex = 1;
             button1.Text = "Atualizar cache";
             button1.UseVisualStyleBackColor = true;

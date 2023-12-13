@@ -1,75 +1,36 @@
-﻿using AddinGrades.DTO;
-using Microsoft.Office.Interop.Excel;
-using Range = Microsoft.Office.Interop.Excel.Range;
+﻿using AddinGrades.Upgrader;
 
 namespace AddinGrades
 {
     public class Patcher
     {
-        public static Dictionary<(string oldVersion, string newVersion), System.Action> UpdaterDictionary = new(){
+        public static Dictionary<(string oldVersion, string newVersion), Action> UpdaterDictionary = new(){
 
-            { ("v1" , "v1.1"), UpdateFrom1To1Dot1 }
+            { ("v1" , "v1.1"), new UpdateFrom1to1Dot1().Update },
+            { ("v1" , "v1.2"), new UpdateFrom1Dot1To1Dot2().Update },
+            { ("v1.1", "v1.2"), new UpdateFrom1Dot1To1Dot2().Update },
+            { ("v1.2", "v1.3"), new UpdateFrom1Dot2To1Dot3().Update }
         };
 
-        //Updates project from 1.0 to 1.1
-        private static void UpdateFrom1To1Dot1()
+
+        public static void UpdateWorkbook(string currentSheetVersion)
         {
-            Program.LoggerPanel.WriteLineToPanel("Upgrading project from v1.0 to v1.1");
-            Microsoft.Office.Interop.Excel.Application app = Utils.GetExcelApplication();
-            if( app != null)
+            try
             {
-                WorkbookData workbookData = Utils.LoadWorkbookData(app);
-                if (workbookData != null)
+                foreach (var pair in UpdaterDictionary)
                 {
-                    //Fix collumn name from feedback to sinteses
-                    foreach (string gradeSheetID in workbookData.GradeSheets.Keys)
-                    { 
-                        Worksheet sheet = Utils.GetWorksheetById(gradeSheetID);
-                        if (sheet != null)
-                        {
-                            using (Unprotecter unprotecter = new(sheet))
-                            {
-                                string feedbackColumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(sheet, "Feedback") + 1);
-                                sheet.Columns.get_Range($"{feedbackColumnName}2").Value = GradeTable.CollumnName.Feedback;
-                            }
-
-                            GradeTable.LockCollumnsAndHeaders(sheet);
-                            GradeTable.ApplyStyles(sheet);
-                            sheet.Protect();
-                        }
+                    if (currentSheetVersion.Equals(pair.Key.oldVersion) && Program.Version.Equals(pair.Key.newVersion))
+                    {
+                        Program.LoggerPanel.WriteLineToPanel($"Upgrading project from {pair.Key.oldVersion} to {pair.Key.newVersion}");
+                        pair.Value.Invoke();
                     }
-
-                    //Fix collumn order of sinteses page
-                    Worksheet worksheet = Utils.GetFeedbackSheet();
-                    var orderedWorkSheetsByName = workbookData.GradeSheets.Keys.Select(id => (Utils.GetWorksheetById(id).Name, id)).OrderBy(s => s.Name);
-                    if (worksheet != null) {
-                        using (Unprotecter unprotecter = new(worksheet))
-                        {
-                            Range range = worksheet.Columns.get_Range("C1");
-                            foreach (var item in orderedWorkSheetsByName)
-                            {
-                                range.Value = $"=GetSheetName(\"{item.id}\")";
-                                range = range.Offset[0, 2];
-                            }
-                        }
-
-                        FeedbackTable.LockCollumnsAndHeaders(worksheet);
-                        worksheet.Protect();
-                    }
-
-                    workbookData.Version = "v1.1";
-                    workbookData.Save();  
-                     
                 }
-            } 
-        }
-         
-        public static void UpdateWorkbook(string sheetVersion)
-        {
-            if (UpdaterDictionary.TryGetValue((sheetVersion, Program.Version), out var updaterMethod))
+            }
+            catch (Exception ex)
             {
-                updaterMethod.Invoke();
+                Program.LoggerPanel.WriteLineToPanel("[Error] Could not upgrade sheet! ");
             }
         }
+
     }
 }

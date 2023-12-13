@@ -2,8 +2,6 @@
 using ExcelDna.Integration;
 using ExcelDna.Integration.CustomUI;
 using Microsoft.Office.Interop.Excel;
-using System.Reflection;
-using System.Xml.Linq;
 using Range = Microsoft.Office.Interop.Excel.Range;
 
 namespace AddinGrades
@@ -12,9 +10,10 @@ namespace AddinGrades
     {
         public static LoggerPanel? LoggerPanel;
         public static bool CreationOfGradeSheetInProgress = false;
-        public static string Version = "v1.1";
+        public static string Version = "v1.3";
+        public static string ExcelAddinPathDir = Path.GetDirectoryName((string)XlCall.Excel(XlCall.xlGetName));
         //Cache stuff that should be its own class tbh
-        public static string CacheFileName = Path.Combine(Path.GetDirectoryName((string)XlCall.Excel(XlCall.xlGetName)), "StudentCache.xml");
+        public static string CacheFileName = Path.Combine(ExcelAddinPathDir, "StudentCache.xml");
         public static StudentsCache? StudentsCache;
         static void Main(string[] args)
         {
@@ -31,8 +30,7 @@ namespace AddinGrades
             ctp.Visible = true;
             ctp.DockPosition = MsoCTPDockPosition.msoCTPDockPositionTop;
             ctp.Height = 80;
-            Utils.GetExcelApplication().WorkbookOpen += OpenWorkbook;
-            Utils.GetExcelApplication().WorkbookActivate += OpenWorkbook;
+            Utils.GetExcelApplication().WorkbookOpen += OpenWorkbook; 
             Utils.GetExcelApplication().WorkbookBeforeClose += BeforeCloseWorkbook;
             if (File.Exists(CacheFileName))
             {
@@ -40,25 +38,25 @@ namespace AddinGrades
             } 
         }
 
-        private void BeforeCloseWorkbook(Workbook Wb, ref bool Cancel)
+        private void BeforeCloseWorkbook(Workbook wb, ref bool Cancel)
         {
-            Utils.GetExcelApplication().ActiveWorkbook.SheetChange -= OnSheetChange;
+            wb.SheetChange -= OnSheetChange;
         }
 
-        private void OpenWorkbook(Workbook Wb)
+        private void OpenWorkbook(Workbook wb)
         {
             WorkbookData data = Utils.LoadWorkbookData(Utils.GetExcelApplication());
             if (data is not null)
             {
                 Patcher.UpdateWorkbook(data.Version);
+                wb.SheetChange += OnSheetChange;
             }
-            Utils.GetExcelApplication().ActiveWorkbook.SheetChange += OnSheetChange;
         }
 
         public static void OnSheetChange(object Sh, Range Target)
         { 
             if (Utils.IsFeedback() is false && Utils.GetCurrentSheetID() != null && CreationOfGradeSheetInProgress is false &&
-                Target.Column == 1 && Target.Row != 1)//This is a change in the alunos column
+                Target.Column == 2 && Target.Row != 1)//This is a change in the alunos column
             {
                 //Empty clean row maybe
                 if(Target.Value is null)

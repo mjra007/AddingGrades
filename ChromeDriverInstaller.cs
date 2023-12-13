@@ -31,7 +31,7 @@ public class ChromeDriverInstaller
     public Task Install(bool forceDownload) => this.Install((string)null, forceDownload);
 
     public async Task Install(string chromeVersion, bool forceDownload)
-    {
+    { 
         if (chromeVersion == null)
             chromeVersion = await this.GetChromeVersion();
         chromeVersion = chromeVersion.Substring(0, chromeVersion.LastIndexOf('.'));

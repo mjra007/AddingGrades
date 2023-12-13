@@ -58,12 +58,12 @@ namespace AddinGrades
                     data.Save();
                     if (classesDropDown.SelectedItem is null)
                     {
-                        new GradeTable(gradeSheetID).CreateDefaultTable(worksheet, data, app, new List<string>());
+                        new GradeTable(gradeSheetID).CreateDefaultTable(worksheet, data, app, new List<string>(), null);
                     }
                     else
                     {
                         IEnumerable<string> studentNames = Program.StudentsCache.StudnetsByClass[(string)classesDropDown.SelectedItem];
-                        new GradeTable(gradeSheetID).CreateDefaultTable(worksheet, data, app, studentNames);
+                        new GradeTable(gradeSheetID).CreateDefaultTable(worksheet, data, app, studentNames, (string)classesDropDown.SelectedItem);
                     }
                 }
             }
@@ -73,6 +73,7 @@ namespace AddinGrades
             if (feedback != null)
             {
                 FeedbackTable.LockCollumnsAndHeaders(feedback);
+                FeedbackTable.SetStyle(feedback);
                 feedback.Protect(AllowFormattingColumns: true, AllowFormattingCells: true, AllowFormattingRows: true);
             }
             //For some reason chrome driver makes it so you have to bind this event again 
