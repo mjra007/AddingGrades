@@ -226,6 +226,7 @@ return finalGrade.toFixed(1);
                     range.VerticalAlignment = XlVAlign.xlVAlignCenter;
                 }
 
+                string lastColumn = Utils.GetExcelColumnName(DefaultColumns.Count + data.GradeSheets[sheetID].Coursework.Count);
                 //Style the final grade, knowledge and feedback
                 string studentsColumnName  = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(worksheet, CollumnName.Student) + 1);
                 string feedbackColumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(worksheet, CollumnName.Feedback) + 1);
@@ -234,8 +235,8 @@ return finalGrade.toFixed(1);
                 string atitudesCollumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(worksheet, CollumnName.Atitudes) + 1); 
                 string weightedTableCollumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(worksheet, CollumnName.CourseworkWeigthtedTable) + 1);
                 range = worksheet.get_Range($"{feedbackColumnName}3", $"{feedbackColumnName}100");
-                range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
-                range.VerticalAlignment = XlVAlign.xlVAlignCenter;
+                range.HorizontalAlignment = XlHAlign.xlHAlignLeft;
+                range.VerticalAlignment = XlVAlign.xlVAlignTop;
                 range.WrapText = true;
                 range = worksheet.get_Range($"{knowledgeCollumnName}3", $"{knowledgeCollumnName}100");
                 range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
@@ -250,8 +251,11 @@ return finalGrade.toFixed(1);
                 range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
                 range.VerticalAlignment = XlVAlign.xlVAlignCenter;
                 range = worksheet.get_Range($"{studentsColumnName}3", $"{studentsColumnName}100");
-                range.HorizontalAlignment = XlHAlign.xlHAlignLeft;
+                range.HorizontalAlignment = XlHAlign.xlHAlignLeft; 
                 range.VerticalAlignment = XlVAlign.xlVAlignCenter;
+
+                worksheet.get_Range("A2", $"{lastColumn}2").Cells.Font.Size = 13;
+                worksheet.get_Range("A2", $"{lastColumn}2").Cells.Font.FontStyle = "Bold";
             }
             if (protectAtTheEnd) 
                 worksheet.Protect(); 

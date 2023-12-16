@@ -1,9 +1,6 @@
 ﻿using AddinGrades.DTO;
 using ExcelDna.Integration;
 using Microsoft.Office.Interop.Excel;
-using Microsoft.VisualStudio.Services.Common;
-using System;
-using System.Windows.Forms.VisualStyles;
 using Application = Microsoft.Office.Interop.Excel.Application;
 using Range = Microsoft.Office.Interop.Excel.Range;
 
@@ -126,8 +123,8 @@ namespace AddinGrades
                 {
                     range.WrapText = true;
                     range.ColumnWidth = 30;
-                    range.EntireColumn.HorizontalAlignment = XlHAlign.xlHAlignCenter;
-                    range.EntireColumn.VerticalAlignment = XlVAlign.xlVAlignCenter;
+                    range.EntireColumn.HorizontalAlignment = XlHAlign.xlHAlignLeft;
+                    range.EntireColumn.VerticalAlignment = XlVAlign.xlVAlignTop;
                     range = range.Offset[0, 2];
                 }
 

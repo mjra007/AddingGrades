@@ -29,66 +29,66 @@ namespace AddinGrades.Upgrader
         private void InsertStudentPicturesGradeTable(WorkbookData workbookData)
         {
             if (workbookData != null)
-            { 
-                    foreach (string gradeSheetID in workbookData.GradeSheets.Keys)
+            {
+                foreach (string gradeSheetID in workbookData.GradeSheets.Keys)
+                {
+                    Worksheet sheet = Utils.GetWorksheetById(gradeSheetID);
+                    if (sheet != null)
                     {
-                        Worksheet sheet = Utils.GetWorksheetById(gradeSheetID);
-                        if (sheet != null)
+                        using (Unprotecter unprotecter = new(sheet))
                         {
-                            using (Unprotecter unprotecter = new(sheet))
+                            Pictures excelPictures = (Pictures)sheet.Pictures(Type.Missing);
+
+                            foreach (Picture item in excelPictures)
                             {
-                                Pictures excelPictures = (Pictures)sheet.Pictures(Type.Missing);
+                                item.Delete();
+                            }
 
-                                foreach (Picture item in excelPictures)
+                            Range currentCell = sheet.get_Range("A3");
+
+                            double rColRow = 6; // Ratio of units of measure: columns widths to row heights
+                            double rImgColWidth = 5.9; // Ratio of units of measure: image size and column widths
+
+                            double lastMaxWidth = 0d;
+
+                            IEnumerable<string> studentNames = Utils.GetStudentNames(sheet).ToList();
+                            string className = workbookData.ClassName;
+
+                            if (string.IsNullOrEmpty(className) is false)
+                            {
+                                foreach (string name in studentNames)
                                 {
-                                    item.Delete();
-                                }
-                                
-                                Range currentCell = sheet.get_Range("A3");
-
-                                double rColRow = 6; // Ratio of units of measure: columns widths to row heights
-                                double rImgColWidth = 5.9; // Ratio of units of measure: image size and column widths
-
-                                double lastMaxWidth = 0d;
-
-                                IEnumerable<string> studentNames = Utils.GetStudentNames(sheet).ToList();
-                                string className = workbookData.ClassName;
-
-                                if (string.IsNullOrEmpty(className) is false)
-                                { 
-                                    foreach (string name in studentNames)
+                                    if (File.Exists(Path.Combine(Program.ExcelAddinPathDir, "StudentImages", $"{className}-{name}.png")))
                                     {
-                                        if (File.Exists(Path.Combine(Program.ExcelAddinPathDir, "StudentImages", $"{className}-{name}.png")))
+                                        Picture excelPicture = excelPictures.Insert(Path.Combine(Program.ExcelAddinPathDir, "StudentImages", $"{className}-{name}.png"));
+
+                                        excelPicture.Top = currentCell.Top;
+                                        excelPicture.Left = currentCell.Left;
+                                        if (excelPicture.Width > lastMaxWidth)
                                         {
-                                           Picture excelPicture = excelPictures.Insert(Path.Combine(Program.ExcelAddinPathDir, "StudentImages", $"{className}-{name}.png"));
-                                      
-                                            excelPicture.Top = currentCell.Top;
-                                            excelPicture.Left = currentCell.Left;
-                                            if (excelPicture.Width > lastMaxWidth)
-                                            {
-                                                currentCell.ColumnWidth = (excelPicture.Width / rImgColWidth);
-                                                lastMaxWidth = excelPicture.Width;
-                                            }
-                                            currentCell.RowHeight = excelPicture.Height;
+                                            currentCell.ColumnWidth = (excelPicture.Width / rImgColWidth);
+                                            lastMaxWidth = excelPicture.Width;
+                                        }
+                                        currentCell.RowHeight = excelPicture.Height;
                                     }
                                     currentCell = currentCell.Offset[1, 0];
                                 }
-                                }
-                            } 
+                            }
                         }
-                    
-                    } 
+                    }
+
+                }
             }
         }
 
         private void InsertStudentPicturesFeedbackTable(WorkbookData workbookData)
         {
             Worksheet sheet = Utils.GetFeedbackSheet();
-            if(sheet != null)
+            if (sheet != null)
             {
                 using (Unprotecter unprotecter = new(sheet))
                 {
-                    Range collumnNameCell = sheet.get_Range($"{Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(sheet, GradeTable.CollumnName.Student, "A1")+1)}1");
+                    Range collumnNameCell = sheet.get_Range($"{Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(sheet, GradeTable.CollumnName.Student, "A1") + 1)}1");
                     collumnNameCell.EntireColumn.Insert(XlInsertShiftDirection.xlShiftToRight, XlInsertFormatOrigin.xlFormatFromRightOrBelow);
 
                     Range currentCell = sheet.get_Range("A2");
@@ -121,11 +121,14 @@ namespace AddinGrades.Upgrader
                             currentCell = currentCell.Offset[1, 0];
                         }
                     }
+
+                    FeedbackTable.LockCollumnsAndHeaders(sheet);
+                    FeedbackTable.SetStyle(sheet);
                 }
             }
-           
+
         }
-       
+
         static List<(string, string)> oldGradeHeaders = new()
             {
                 ("Knowledge", GradeTable.CollumnName.Knowledge),
@@ -176,24 +179,21 @@ namespace AddinGrades.Upgrader
                 {
                     foreach (var item in oldFeedbackHeaders)
                     {
-                        string feedbackColumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(sheet, item.Item1, "A1") + 1); 
-                        Range range = sheet.Columns.get_Range($"{feedbackColumnName}1"); 
+                        string feedbackColumnName = Utils.GetExcelColumnName(Utils.GetCollumnByNameIndex(sheet, item.Item1, "A1") + 1);
+                        Range range = sheet.Columns.get_Range($"{feedbackColumnName}1");
                         range.Value = item.Item2;
-                        if (item.Item1.Equals(oldFeedbackHeaders[0].Item1))
-                        {
-                            int indexLast = GradeTable.GetLastHeaderCollumnWithValue("B1"); 
-                            for (int i = 0; i < indexLast; i++)
-                            {
-                                range = range.Offset[0, 2]; 
-                                range.Value = item.Item2;
 
+                        int indexLast = GradeTable.GetLastHeaderCollumnWithValue("A1");
+                        for (int i = 0; i < indexLast; i++)
+                        {
+                            if (range.Value is not null && range.Value.Equals(oldFeedbackHeaders[0].Item1))
+                            {
+                                range.Value = item.Item2;
                             }
+                            range = range.Offset[0, 2];
                         }
                     }
                 }
-
-                FeedbackTable.LockCollumnsAndHeaders(sheet);
-                FeedbackTable.SetStyle(sheet);
                 sheet.Protect();
             }
         }
