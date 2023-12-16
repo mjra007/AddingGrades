@@ -22,6 +22,8 @@ namespace AddinGrades.Upgrader
                     PatchHeaderNamesFeedbackTable();
                     InsertStudentPicturesFeedbackTable(workbookData);
                     InsertStudentPicturesGradeTable(workbookData);
+                    workbookData.Version = "v1.3";
+                    workbookData.Save();
                 }
             }
         }

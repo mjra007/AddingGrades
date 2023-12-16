@@ -166,5 +166,9 @@ namespace AddinGrades
             groupBox2.Text = $"Total: {total}/100  Unassigned: {100 - total}";
         }
 
+        private void ManageCourseworkWeight_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Utils.GetExcelApplication().CalculateFull();
+        }
     }
 }

@@ -28,136 +28,137 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            groupBox1 = new GroupBox();
-            saveWeightChangesButton = new Button();
-            groupBox2 = new GroupBox();
-            flowLayoutPanel1 = new FlowLayoutPanel();
-            tablesGroup = new GroupBox();
-            tablesList = new CheckedListBox();
-            tableGroup = new GroupBox();
-            CreateButton = new Button();
-            newTableName = new TextBox();
-            timer1 = new System.Windows.Forms.Timer(components);
-            groupBox1.SuspendLayout();
-            groupBox2.SuspendLayout();
-            tablesGroup.SuspendLayout();
-            tableGroup.SuspendLayout();
-            SuspendLayout();
+            this.components = new System.ComponentModel.Container();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.saveWeightChangesButton = new System.Windows.Forms.Button();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.tablesGroup = new System.Windows.Forms.GroupBox();
+            this.tablesList = new System.Windows.Forms.CheckedListBox();
+            this.tableGroup = new System.Windows.Forms.GroupBox();
+            this.CreateButton = new System.Windows.Forms.Button();
+            this.newTableName = new System.Windows.Forms.TextBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.tablesGroup.SuspendLayout();
+            this.tableGroup.SuspendLayout();
+            this.SuspendLayout();
             // 
             // groupBox1
             // 
-            groupBox1.Controls.Add(saveWeightChangesButton);
-            groupBox1.Controls.Add(groupBox2);
-            groupBox1.Controls.Add(tablesGroup);
-            groupBox1.Controls.Add(tableGroup);
-            groupBox1.Location = new Point(12, 12);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(666, 484);
-            groupBox1.TabIndex = 1;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Menu";
+            this.groupBox1.Controls.Add(this.saveWeightChangesButton);
+            this.groupBox1.Controls.Add(this.groupBox2);
+            this.groupBox1.Controls.Add(this.tablesGroup);
+            this.groupBox1.Controls.Add(this.tableGroup);
+            this.groupBox1.Location = new System.Drawing.Point(12, 12);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(666, 484);
+            this.groupBox1.TabIndex = 1;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Menu";
             // 
             // saveWeightChangesButton
             // 
-            saveWeightChangesButton.Location = new Point(289, 446);
-            saveWeightChangesButton.Name = "saveWeightChangesButton";
-            saveWeightChangesButton.Size = new Size(372, 23);
-            saveWeightChangesButton.TabIndex = 1;
-            saveWeightChangesButton.Text = "Salvar pesos";
-            saveWeightChangesButton.UseVisualStyleBackColor = true;
-            saveWeightChangesButton.Click += saveWeightChangesButton_Click;
+            this.saveWeightChangesButton.Location = new System.Drawing.Point(289, 446);
+            this.saveWeightChangesButton.Name = "saveWeightChangesButton";
+            this.saveWeightChangesButton.Size = new System.Drawing.Size(372, 23);
+            this.saveWeightChangesButton.TabIndex = 1;
+            this.saveWeightChangesButton.Text = "Salvar pesos";
+            this.saveWeightChangesButton.UseVisualStyleBackColor = true;
+            this.saveWeightChangesButton.Click += new System.EventHandler(this.saveWeightChangesButton_Click);
             // 
             // groupBox2
             // 
-            groupBox2.Controls.Add(flowLayoutPanel1);
-            groupBox2.Location = new Point(286, 22);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(375, 421);
-            groupBox2.TabIndex = 2;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "Pesos";
+            this.groupBox2.Controls.Add(this.flowLayoutPanel1);
+            this.groupBox2.Location = new System.Drawing.Point(286, 22);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(375, 421);
+            this.groupBox2.TabIndex = 2;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Pesos";
             // 
             // flowLayoutPanel1
             // 
-            flowLayoutPanel1.AutoScroll = true;
-            flowLayoutPanel1.Dock = DockStyle.Fill;
-            flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
-            flowLayoutPanel1.Location = new Point(3, 19);
-            flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(369, 399);
-            flowLayoutPanel1.TabIndex = 0;
-            flowLayoutPanel1.WrapContents = false;
+            this.flowLayoutPanel1.AutoScroll = true;
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 19);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(369, 399);
+            this.flowLayoutPanel1.TabIndex = 0;
+            this.flowLayoutPanel1.WrapContents = false;
             // 
             // tablesGroup
             // 
-            tablesGroup.Controls.Add(tablesList);
-            tablesGroup.Location = new Point(6, 81);
-            tablesGroup.Name = "tablesGroup";
-            tablesGroup.Size = new Size(274, 392);
-            tablesGroup.TabIndex = 1;
-            tablesGroup.TabStop = false;
-            tablesGroup.Text = "Seleciona uma tabela";
-            tablesGroup.Enter += tablesGroup_Enter;
+            this.tablesGroup.Controls.Add(this.tablesList);
+            this.tablesGroup.Location = new System.Drawing.Point(6, 81);
+            this.tablesGroup.Name = "tablesGroup";
+            this.tablesGroup.Size = new System.Drawing.Size(274, 392);
+            this.tablesGroup.TabIndex = 1;
+            this.tablesGroup.TabStop = false;
+            this.tablesGroup.Text = "Seleciona uma tabela";
             // 
             // tablesList
             // 
-            tablesList.FormattingEnabled = true;
-            tablesList.Location = new Point(6, 22);
-            tablesList.Name = "tablesList";
-            tablesList.Size = new Size(262, 364);
-            tablesList.TabIndex = 0;
-            tablesList.SelectedIndexChanged += tablesList_SelectedIndexChanged;
+            this.tablesList.FormattingEnabled = true;
+            this.tablesList.Location = new System.Drawing.Point(6, 22);
+            this.tablesList.Name = "tablesList";
+            this.tablesList.Size = new System.Drawing.Size(262, 364);
+            this.tablesList.TabIndex = 0;
+            this.tablesList.SelectedIndexChanged += new System.EventHandler(this.tablesList_SelectedIndexChanged);
             // 
             // tableGroup
             // 
-            tableGroup.Controls.Add(CreateButton);
-            tableGroup.Controls.Add(newTableName);
-            tableGroup.Location = new Point(6, 22);
-            tableGroup.Name = "tableGroup";
-            tableGroup.Size = new Size(274, 53);
-            tableGroup.TabIndex = 0;
-            tableGroup.TabStop = false;
-            tableGroup.Text = "Criar nova tabela de pesos";
+            this.tableGroup.Controls.Add(this.CreateButton);
+            this.tableGroup.Controls.Add(this.newTableName);
+            this.tableGroup.Location = new System.Drawing.Point(6, 22);
+            this.tableGroup.Name = "tableGroup";
+            this.tableGroup.Size = new System.Drawing.Size(274, 53);
+            this.tableGroup.TabIndex = 0;
+            this.tableGroup.TabStop = false;
+            this.tableGroup.Text = "Criar nova tabela de pesos";
             // 
             // CreateButton
             // 
-            CreateButton.Location = new Point(193, 22);
-            CreateButton.Name = "CreateButton";
-            CreateButton.Size = new Size(75, 23);
-            CreateButton.TabIndex = 1;
-            CreateButton.Text = "Criar";
-            CreateButton.UseVisualStyleBackColor = true;
-            CreateButton.Click += CreateButton_Click;
+            this.CreateButton.Location = new System.Drawing.Point(193, 22);
+            this.CreateButton.Name = "CreateButton";
+            this.CreateButton.Size = new System.Drawing.Size(75, 23);
+            this.CreateButton.TabIndex = 1;
+            this.CreateButton.Text = "Criar";
+            this.CreateButton.UseVisualStyleBackColor = true;
+            this.CreateButton.Click += new System.EventHandler(this.CreateButton_Click);
             // 
             // newTableName
             // 
-            newTableName.Location = new Point(6, 22);
-            newTableName.Name = "newTableName";
-            newTableName.Size = new Size(181, 23);
-            newTableName.TabIndex = 0;
+            this.newTableName.Location = new System.Drawing.Point(6, 22);
+            this.newTableName.Name = "newTableName";
+            this.newTableName.Size = new System.Drawing.Size(181, 23);
+            this.newTableName.TabIndex = 0;
             // 
             // timer1
             // 
-            timer1.Enabled = true;
-            timer1.Interval = 1500;
-            timer1.Tick += OnTimerTick;
+            this.timer1.Enabled = true;
+            this.timer1.Interval = 1500;
+            this.timer1.Tick += new System.EventHandler(this.OnTimerTick);
             // 
             // ManageCourseworkWeight
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(688, 506);
-            Controls.Add(groupBox1);
-            Name = "ManageCourseworkWeight";
-            StartPosition = FormStartPosition.CenterScreen;
-            Text = "Editar momentos de avaliação";
-            groupBox1.ResumeLayout(false);
-            groupBox2.ResumeLayout(false);
-            tablesGroup.ResumeLayout(false);
-            tableGroup.ResumeLayout(false);
-            tableGroup.PerformLayout();
-            ResumeLayout(false);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(688, 506);
+            this.Controls.Add(this.groupBox1);
+            this.Name = "ManageCourseworkWeight";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Editar momentos de avaliação";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ManageCourseworkWeight_FormClosing);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.tablesGroup.ResumeLayout(false);
+            this.tableGroup.ResumeLayout(false);
+            this.tableGroup.PerformLayout();
+            this.ResumeLayout(false);
+
         }
 
         #endregion
