@@ -55,6 +55,7 @@ namespace AddinGrades
                     gradeSheet.CourseworkWeightedTables.Add(new CourseworkWeightedTable("Padrão", gradeSheet.Coursework,
                         Enumerable.Repeat(0d, gradeSheet.Coursework.Count).ToArray()));
                     data.GradeSheets.Add(gradeSheetID, gradeSheet);
+                    data.Version = Program.Version;
                     data.Save();
                     if (classesDropDown.SelectedItem is null)
                     {
@@ -62,6 +63,7 @@ namespace AddinGrades
                     }
                     else
                     {
+                        data.ClassName = (string)classesDropDown.SelectedItem;
                         IEnumerable<string> studentNames = Program.StudentsCache.StudnetsByClass[(string)classesDropDown.SelectedItem];
                         new GradeTable(gradeSheetID).CreateDefaultTable(worksheet, data, app, studentNames, (string)classesDropDown.SelectedItem);
                     }
